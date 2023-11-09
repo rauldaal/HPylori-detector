@@ -1,2 +1,2 @@
 from ..objects.dataset import AnnotatedDataset, CroppedDataset
-from ..objects.model import ConvAE
+from ..objects.model import Autoencoder

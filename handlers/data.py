@@ -3,27 +3,44 @@ from ..objects import AnnotatedDataset, CroppedDataset
 
 
 def get_cropped_dataloader(config):
-    cropped_data_loader = DataLoader(
-        dataset=generate_cropped_dataset(config),
+    train, validation = generate_cropped_dataset(config)
+    cropped_data_loader_train = DataLoader(
+        dataset=train,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
         collate_fn=config.get("collateFn")
     )
 
-    return cropped_data_loader
+    cropped_data_loader_validation = DataLoader(
+        dataset=validation,
+        batch_size=config.get("batchSize"),
+        shuffle=config.get("shufle"),
+        num_workers=config.get("numWorkers"),
+        collate_fn=config.get("collateFn")
+    )
+
+    return cropped_data_loader_train, cropped_data_loader_validation
 
 
 def get_annotated_dataloader(config):
-    annotated_data_loader = DataLoader(
-        dataset=genearate_annotated_dataset(config),
+    train, validation = genearate_annotated_dataset(config)
+    annotated_data_loader_train = DataLoader(
+        dataset=train,
+        batch_size=config.get("batchSize"),
+        shuffle=config.get("shufle"),
+        num_workers=config.get("numWorkers"),
+        collate_fn=config.get("collateFn")
+    )
+    annotated_data_loader_validation = DataLoader(
+        dataset=validation,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
         collate_fn=config.get("collateFn")
     )
 
-    return annotated_data_loader
+    return annotated_data_loader_train, annotated_data_loader_validation
 
 
 def generate_cropped_dataset(config):
