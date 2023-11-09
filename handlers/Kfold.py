@@ -18,7 +18,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 import test
 import train
-from ..objects import model
+from objects import model
 import data
 
 def kfold(batch_size,num_epochs,k):

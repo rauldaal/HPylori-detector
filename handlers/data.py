@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader, random_split
-from ..objects import AnnotatedDataset, CroppedDataset
+from objects import AnnotatedDataset, CroppedDataset
 
 
 def get_cropped_dataloader(config):
@@ -45,16 +45,16 @@ def get_annotated_dataloader(config):
 
 def generate_cropped_dataset(config):
     cropped_dataset = CroppedDataset(
-        folder_path=config.get("folder_path"),
-        csv_name=config.get("csv_name")
+        folder_path=config.get("folder_path_cropped"),
+        csv_name=config.get("cropped_csv")
     )
     return cropped_dataset
 
 
 def genearate_annotated_dataset(config):
     annotated_dataset = AnnotatedDataset(
-        folder_path=config.get("folder_paht"),
-        csv_name=config.get("csv_name")
+        folder_path=config.get("folder_path_annoted"),
+        csv_name=config.get("annoted_csv")
     )
     return annotated_dataset
 

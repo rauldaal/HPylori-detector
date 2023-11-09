@@ -31,11 +31,6 @@ def main(config):
             criterion=criterion)
 
 
-
-
-
-
-
 if __name__ == "__main__":
     with open("config.json", "r") as f:
         config_data = json.load(f)

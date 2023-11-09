@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from ..objects import Autoencoder
+from objects import Autoencoder
 
-assert torch.cuda.is_available(), "GPU is not enabled"
+#assert torch.cuda.is_available(), "GPU is not enabled"
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 

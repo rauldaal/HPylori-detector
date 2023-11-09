@@ -10,7 +10,9 @@ class QuironDataset(Dataset):
 		self.raw_data = pd.read_csv(folder_path+"/"+csv_name)
 
 	def __getitem__(self, idx):
-		return self.data.iloc[idx], io.imread(self.folder_path+"/"+self.data["patientId"]+"/"+self.data["imageID"])
+		print(self.data)
+		print(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
+		return self.data.iloc[idx], io.imread(self.folder_path+"/"+self.data["patientID"]+"_1/"+self.data["imageID"])
 	def __len__(self):
 		return len(self.df)
 	
@@ -32,12 +34,13 @@ class CroppedDataset(QuironDataset):
 		self.process_csv()
 	
 	def process_csv(self):
-		self.data = pd.Dataframe(columns=["parientID", "imageID", "Presence"])
+		self.data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
 		folders = self.raw_data[self.raw_data["DENSITAT"] == "NEGATIVA"]["CODI"].tolist()
 		for folder in folders:
-			images = os.listdir(self.folder_path + "/" + folder)
-			row = [folder, images, -1]
-			self.data.iloc[len(self.data)] = row
+			images = os.listdir(self.folder_path + "/" + folder+ "_1")
+			for img in images:
+				row = [folder, img, -1]
+				self.data.loc[len(self.data)] = row
 
 
 

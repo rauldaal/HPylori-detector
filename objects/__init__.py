@@ -1,2 +1,2 @@
-from ..objects.dataset import AnnotatedDataset, CroppedDataset
-from ..objects.model import Autoencoder
+from objects.dataset import AnnotatedDataset, CroppedDataset
+from objects.model import Autoencoder

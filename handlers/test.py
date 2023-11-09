@@ -1,4 +1,3 @@
-from objects import ConvAE
 import torch
 import torchvision
 from torch import nn
@@ -13,12 +12,8 @@ from torch.nn import functional as F
 from torchvision import datasets,transforms
 import torchvision.transforms as transforms
 #  use gpu if available
-assert torch.cuda.is_available(), "GPU is not enabled"
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-#If this cell fails you need to change the runtime of your colab notebook to GPU
-# Go to Runtime -> Change Runtime Type and select GPU
-assert torch.cuda.is_available(), "GPU is not enabled"
+#assert torch.cuda.is_available(), "GPU is not enabled"
+#device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 #  use gpu if available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

@@ -2,7 +2,7 @@ import torch
 import wandb
 
 
-assert torch.cuda.is_available(), "GPU is not enabled"
+#assert torch.cuda.is_available(), "GPU is not enabled"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
