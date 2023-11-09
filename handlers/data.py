@@ -24,7 +24,8 @@ def get_cropped_dataloader(config):
 
 
 def get_annotated_dataloader(config):
-    train, validation = genearate_annotated_dataset(config)
+    dataset = genearate_annotated_dataset(config)
+    train, validation = train_test_splitter(dataset=dataset, split_value=0.8)
     annotated_data_loader_train = DataLoader(
         dataset=train,
         batch_size=config.get("batchSize"),
