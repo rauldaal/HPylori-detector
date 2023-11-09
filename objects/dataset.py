@@ -12,7 +12,7 @@ class QuironDataset(Dataset):
 	def __getitem__(self, idx):
 		return self.data.iloc[idx], io.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
 	def __len__(self):
-		return len(self.df)
+		return len(self.data)
 	
 
 class AnnotatedDataset(QuironDataset):

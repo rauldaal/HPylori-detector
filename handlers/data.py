@@ -3,7 +3,9 @@ from objects import AnnotatedDataset, CroppedDataset
 
 
 def get_cropped_dataloader(config):
-    train, validation = generate_cropped_dataset(config)
+    dataset = generate_cropped_dataset(config)
+    train, validation = train_test_splitter(dataset=dataset, split_value=0.8)
+
     cropped_data_loader_train = DataLoader(
         dataset=train,
         batch_size=config.get("batchSize"),
