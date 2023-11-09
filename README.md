@@ -7,3 +7,5 @@ Introducimos muestras positivas en el autoencoder
 El error aumenta en X situación
 
 # Project structure
+
+# Results
