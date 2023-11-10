@@ -51,7 +51,7 @@ def generate_cropped_dataset(config):
         csv_name=config.get("cropped_csv"),
         transform = transforms.Compose([
             transforms.ToPILImage(),
-            transforms.Resize((config.get("new_width"), config.get("new_height"))),
+            transforms.Resize((config.get("image_size"), config.get("image_size"))),
             transforms.ToTensor()
         ])
     )
@@ -64,7 +64,7 @@ def genearate_annotated_dataset(config):
         csv_name=config.get("annoted_csv"),
         transform = transforms.Compose([
             transforms.ToPILImage(),
-            transforms.Resize((config.get("new_width"), config.get("new_height"))),
+            transforms.Resize((config.get("image_size"), config.get("image_size"))),
             transforms.ToTensor()
         ])
     )
