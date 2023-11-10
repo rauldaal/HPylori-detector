@@ -1,3 +1,4 @@
+import math
 from torch.utils.data import DataLoader, random_split
 from objects import AnnotatedDataset, CroppedDataset
 
@@ -33,14 +34,12 @@ def get_annotated_dataloader(config):
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
-        collate_fn=config.get("collateFn")
     )
     annotated_data_loader_validation = DataLoader(
         dataset=validation,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
-        collate_fn=config.get("collateFn")
     )
 
     return annotated_data_loader_train, annotated_data_loader_validation
@@ -63,5 +62,7 @@ def genearate_annotated_dataset(config):
 
 
 def train_test_splitter(dataset, split_value):
-    train, test = random_split(dataset, [len(dataset)*split_value, len(dataset)*(1-split_value)])
+    size_train = math.ceil(len(dataset)*split_value)
+    size_test = math.floor(len(dataset)*(1-split_value))
+    train, test = random_split(dataset, [size_train, size_test])
     return train, test

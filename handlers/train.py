@@ -7,14 +7,15 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def train(model, train_data_loader, validation_data_loader, optimizer, criterion, num_epochs):
-    for epoch in num_epochs:
+    for epoch in range(num_epochs):
         print("+++++"*10)
         train_loss = 0
 
         model.train()
         for _, imgs in train_data_loader:
-
-            imgs = imgs.to(DEVICE)
+            print(imgs.shape)
+            exit()
+            imgs = imgs.to(DEVICE, dtype=torch.float)
             optimizer.zero_grad()
             outputs = model(imgs)
 

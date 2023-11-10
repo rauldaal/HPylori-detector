@@ -1,4 +1,4 @@
-import imageio.v2 as io
+import cv2
 import os
 import pandas as pd
 from torch.utils.data import Dataset
@@ -10,7 +10,7 @@ class QuironDataset(Dataset):
 		self.raw_data = pd.read_csv(folder_path+"/"+csv_name)
 
 	def __getitem__(self, idx):
-		return self.data.iloc[idx], io.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
+		return self.data.iloc[idx], cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
 	def __len__(self):
 		return len(self.data)
 	
