@@ -28,7 +28,8 @@ def main(config):
             train_data_loader=train_dataloader,
             validation_data_loader=validaiton_dataloader,
             optimizer=optimizer,
-            criterion=criterion)
+            criterion=criterion,
+            num_epochs=config.get("num_epochs"))
 
 
 if __name__ == "__main__":
