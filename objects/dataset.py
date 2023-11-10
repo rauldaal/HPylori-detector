@@ -5,19 +5,22 @@ from torch.utils.data import Dataset
 
 
 class QuironDataset(Dataset):
-	def __init__(self, folder_path, csv_name):
+	def __init__(self, folder_path, csv_name, transform):
 		self.folder_path = folder_path
 		self.raw_data = pd.read_csv(folder_path+"/"+csv_name)
+		self.transform = transform
 
 	def __getitem__(self, idx):
-		return self.data.iloc[idx], cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
+		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
+		image = self.transform(image)
+		return image
 	def __len__(self):
 		return len(self.data)
 	
 
 class AnnotatedDataset(QuironDataset):
-	def __init__(self, folder_path, csv_name):
-		super().__init__(folder_path, csv_name)
+	def __init__(self, folder_path, csv_name, transform):
+		super().__init__(folder_path, csv_name, transform)
 		self.data = self.raw_data
 		self.process_csv()
 
@@ -27,8 +30,8 @@ class AnnotatedDataset(QuironDataset):
 
 
 class CroppedDataset(QuironDataset):
-	def __init__(self, folder_path, csv_name):
-		super().__init__(folder_path, csv_name)
+	def __init__(self, folder_path, csv_name, transform):
+		super().__init__(folder_path, csv_name, transform)
 		self.process_csv()
 	
 	def process_csv(self):

@@ -22,7 +22,7 @@ def main(config):
 
         train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
 
-        model, optimizer, criterion = generate_model_objects(config=config)
+        model, criterion, optimizer = generate_model_objects(config=config)
         train(
             model=model,
             train_data_loader=train_dataloader,

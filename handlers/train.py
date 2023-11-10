@@ -1,5 +1,6 @@
 import torch
 import wandb
+import tqdm
 
 
 #assert torch.cuda.is_available(), "GPU is not enabled"
@@ -12,10 +13,10 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         train_loss = 0
 
         model.train()
-        for _, imgs in train_data_loader:
-            print(imgs.shape)
-            exit()
+        for imgs in tqdm.tqdm(train_data_loader):
+
             imgs = imgs.to(DEVICE, dtype=torch.float)
+
             optimizer.zero_grad()
             outputs = model(imgs)
 
@@ -32,7 +33,7 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         validation_loss = 0
         model.eval()
         with torch.no_grad():
-            for _, imgs in validation_data_loader:
+            for imgs in tqdm.tqdm(train_data_loader):
 
                 imgs = imgs.to(DEVICE)
 
@@ -46,4 +47,4 @@ def train(model, train_data_loader, validation_data_loader, optimizer, criterion
         wandb.log({"epoch": epoch, "train_loss": train_loss})
         wandb.log({"epoch": epoch, "validation_loss": validation_loss})
 
-        return 
+    return
