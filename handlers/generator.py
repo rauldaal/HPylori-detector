@@ -37,6 +37,7 @@ def save_model(model, config):
 
     torch.save(model_state, config.get("executionName")+'.pth')
 
+
 def load_model(config):
     model = Autoencoder(**config)
     model.load_state_dict(config.get("modelName"))

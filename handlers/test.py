@@ -17,28 +17,26 @@ def show_image(img):
     plt.imshow(npimg)
     plt.show()
 
-def test(model, test_data_loader, criterion,num_epochs ):
-    for epoch in range(num_epochs):
-        test_loss = 0
-        model.eval()
-        
-        for imgs in tqdm.tqdm(test_data_loader):
-            imgs = imgs.to(DEVICE,dtype=torch.float)
-
-            with torch.no_grad():
-                outputs = model(imgs)
-            
-            # compute training reconstruction loss
-            loss = criterion(outputs, imgs)
+def test(model, test_data_loader, criterion):
     
-            # add the mini-batch training loss to epoch loss
-            test_loss += test.item()
-        
-        # compute the epoch test loss
-        test_loss = loss / len(test_data_loader)
-        
-        # display the epoch training loss
-        print("epoch : {}/{}, Test loss = {:.6f}".format(epoch + 1, num_epochs, test_loss))
-        wandb.log({"epoch": epoch, "test_loss": test_loss})
-        show_image(make_grid(imgs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True))
-        show_image(make_grid(outputs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True)) 
+    test_loss = 0
+    model.eval()
+    print("++++++++"*10)
+    for imgs in tqdm.tqdm(test_data_loader):
+        imgs = imgs.to(DEVICE, dtype=torch.float)
+
+        with torch.no_grad():
+            outputs = model(imgs)
+            loss = criterion(outputs, imgs)
+            test_loss += loss.item()
+            wandb.log({"test_loss": test_loss})
+            print("\nTest Loss", test_loss)
+    
+    # compute the epoch test loss
+    test_loss = test_loss / len(test_data_loader)
+    
+    # display the epoch training loss
+    print("Test loss = {:.6f}".format(test_loss))
+
+    #show_image(make_grid(imgs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True))
+    #show_image(make_grid(outputs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True)) 
