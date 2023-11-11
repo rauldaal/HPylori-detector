@@ -73,6 +73,8 @@ def genearate_annotated_dataset(config):
 
 def train_test_splitter(dataset, split_value, seed):
     size_train = math.ceil(len(dataset)*split_value)
-    size_test = math.floor(len(dataset)*(1-split_value))
+    size_test = len(dataset)-size_train
+    print(size_test, size_train)
+    print(len(dataset))
     train, test = random_split(dataset, [size_train, size_test], generator=Generator().manual_seed(seed))
     return train, test

@@ -1,9 +1,9 @@
 {
     "projectName": "Hlbacter-detector",
-    "multiexecution": true,
+    "multiexecution": false,
     "seed": 42,
 
-    "folder_path_annoted": "C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO DETECTOR/CroppedPatches",
+    "folder_path_annoted": "C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO DETECTOR/AnnotatedPatches/AnnotatedPatches",
     "folder_path_cropped": "C:/Users/Raul/OneDrive - UAB/4t/MA PSIV/RETO DETECTOR/CroppedPatches",
     "annoted_csv": "window_metadata.csv",
     "cropped_csv": "metadata.csv",
