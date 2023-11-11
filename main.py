@@ -46,7 +46,7 @@ def main(config):
 
 
 if __name__ == "__main__":
-    with open("config.json", "r") as f:
+    with open("/fhome/mapsiv04/HPylori-detector/config.json", "r") as f:
         config_data = json.load(f)
         main(config=config_data)
 
