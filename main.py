@@ -6,11 +6,12 @@ import uuid
 
 from handlers import (
     get_cropped_dataloader,
+    get_annotated_dataloader,
     generate_model_objects,
     map_configuration,
     train,
+    test
     )
-
 
 
 def main(config):
@@ -27,8 +28,9 @@ def main(config):
             wandb.define_metric('validation_loss', step_metric='epoch')
 
             train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
-
+            test_annotated_dataloader, train_annotated_dataloader= get_annotated_dataloader(config=config)
             model, criterion, optimizer = generate_model_objects(config=config)
+
             train(
                 model=model,
                 train_data_loader=train_dataloader,
