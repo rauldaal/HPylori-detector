@@ -11,8 +11,14 @@ class QuironDataset(Dataset):
 		self.transform = transform
 
 	def __getitem__(self, idx):
-		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
-		image = self.transform(image)
+		try:
+			image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
+			image = self.transform(image)
+		except:
+			self.data.drop(idx, inplace=True)
+			self.data.reset_index(drop=True, inplace=True)
+			image = self[idx]
+
 		return image
 	def __len__(self):
 		return len(self.data)
