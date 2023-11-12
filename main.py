@@ -28,7 +28,7 @@ def main(config):
             wandb.define_metric('validation_loss', step_metric='epoch')
 
             train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
-            test_annotated_dataloader, _ = get_annotated_dataloader(config=config)
+            pos_annotated_dataloader, neg_annotated_dataloader = get_annotated_dataloader(config=config)
             model, criterion, optimizer = generate_model_objects(config=config)
 
             train(
@@ -40,8 +40,15 @@ def main(config):
                 num_epochs=config.get("num_epochs"))
             test(
                 model=model,
-                test_data_loader=test_annotated_dataloader,
-                criterion=criterion
+                test_data_loader=pos_annotated_dataloader,
+                criterion=criterion,
+                label=1
+            )
+            test(
+                model=model,
+                test_data_loader=neg_annotated_dataloader,
+                criterion=criterion,
+                label=-1
             )
 
 

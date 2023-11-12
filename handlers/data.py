@@ -27,22 +27,22 @@ def get_cropped_dataloader(config):
 
 
 def get_annotated_dataloader(config):
-    dataset = genearate_annotated_dataset(config)
-    train, validation = train_test_splitter(dataset=dataset, split_value=0.8, seed=config.get("seed", 42))
-    annotated_data_loader_train = DataLoader(
-        dataset=train,
+    positive_dataset = genearate_annotated_dataset(config, 1)
+    negative_dataset = genearate_annotated_dataset(config, -1)
+    annotated_data_loader_pos = DataLoader(
+        dataset=positive_dataset,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
     )
-    annotated_data_loader_validation = DataLoader(
-        dataset=validation,
+    annotated_data_loader_neg = DataLoader(
+        dataset=negative_dataset,
         batch_size=config.get("batchSize"),
         shuffle=config.get("shufle"),
         num_workers=config.get("numWorkers"),
     )
 
-    return annotated_data_loader_train, annotated_data_loader_validation
+    return annotated_data_loader_pos, annotated_data_loader_neg
 
 
 def generate_cropped_dataset(config):
@@ -59,16 +59,20 @@ def generate_cropped_dataset(config):
 
 
 def genearate_annotated_dataset(config):
-    annotated_dataset = AnnotatedDataset(
-        folder_path=config.get("folder_path_annoted"),
-        csv_name=config.get("annoted_csv"),
-        transform = transforms.Compose([
-            transforms.ToPILImage(),
-            transforms.Resize((config.get("image_size"), config.get("image_size"))),
-            transforms.ToTensor()
-        ])
-    )
-    return annotated_dataset
+    data = []
+    for i in [1, -1]:
+        annotated_dataset = AnnotatedDataset(
+            folder_path=config.get("folder_path_annoted"),
+            csv_name=config.get("annoted_csv"),
+            transform = transforms.Compose([
+                transforms.ToPILImage(),
+                transforms.Resize((config.get("image_size"), config.get("image_size"))),
+                transforms.ToTensor()
+            ]),
+            label=i
+        )
+        data.append(annotated_dataset)
+    return data[0], data[1]
 
 
 def train_test_splitter(dataset, split_value, seed):

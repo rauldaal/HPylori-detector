@@ -17,7 +17,7 @@ def show_image(img):
     plt.imshow(npimg)
     plt.show()
 
-def test(model, test_data_loader, criterion):
+def test(model, test_data_loader, criterion, label):
     
     test_loss = 0
     model.eval()
@@ -36,7 +36,7 @@ def test(model, test_data_loader, criterion):
     test_loss = test_loss / len(test_data_loader)
     
     # display the epoch training loss
-    print("Test loss = {:.6f}".format(test_loss))
+    print(f"({str(label)})Images Test loss = {test_loss:.6f}")
 
     #show_image(make_grid(imgs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True))
     #show_image(make_grid(outputs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True)) 

@@ -21,19 +21,21 @@ class QuironDataset(Dataset):
 	
 
 class AnnotatedDataset(QuironDataset):
-	def __init__(self, folder_path, csv_name, transform):
+	def __init__(self, folder_path, csv_name, transform, label):
 		super().__init__(folder_path, csv_name, transform)
+		if label not in [-1, 1]:
+			raise ValueError(f'Label for AnnotatedDataset must be -1 or 1 and not {label}')
 		self.data = self.raw_data
-		self.get_negative()
+		self.get_labeled(label)
 		self.process_csv()
 
 	def process_csv(self):
 		self.data["patientID"] = self.data["ID"].apply(lambda x: x.split(".")[0] if "." in x else None)
 		self.data["imageID"] = self.data["ID"].apply(lambda x: x.split(".")[1] if "." in x else None)
 	
-	def get_negative(self):
-		self.data = self.data[self.data['Presence'] == 1]
-  
+	def get_labeled(self, label):
+		self.data = self.data[self.data['Presence'] == label]
+
 	def __getitem__(self, idx):
 		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png")
 		image = self.transform(image)
