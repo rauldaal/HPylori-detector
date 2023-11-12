@@ -6,36 +6,48 @@ import uuid
 
 from handlers import (
     get_cropped_dataloader,
+    get_annotated_dataloader,
     generate_model_objects,
-    train
+    map_configuration,
+    train,
+    test
     )
 
 
-
 def main(config):
-    with wandb.init(
-        project=config.get("projectName"), name=config.get('execution_name'),
-        notes='execution', tags=['main'],
-        reinit=True, config=config):
-        wandb.define_metric('train_loss', step_metric='epoch')
-        wandb.define_metric('validation_loss', step_metric='epoch')
+    configurations = map_configuration(config_data=config)
+    for config in configurations:
+        if not config_data.get("execution_name"):
+            config_data["executionName"] = config_data.get("projectName") + str(uuid.uuid4())[:-4]
+        print(f"Configuration Parameters: {config}")
+        with wandb.init(
+            project=config.get("projectName"), name=config.get('execution_name'),
+            notes='execution', tags=['main'],
+            reinit=True, config=config):
+            wandb.define_metric('train_loss', step_metric='epoch')
+            wandb.define_metric('validation_loss', step_metric='epoch')
 
-        train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
+            train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
+            test_annotated_dataloader, _ = get_annotated_dataloader(config=config)
+            model, criterion, optimizer = generate_model_objects(config=config)
 
-        model, optimizer, criterion = generate_model_objects(config=config)
-        train(
-            model=model,
-            train_data_loader=train_dataloader,
-            validation_data_loader=validaiton_dataloader,
-            optimizer=optimizer,
-            criterion=criterion)
+            train(
+                model=model,
+                train_data_loader=train_dataloader,
+                validation_data_loader=validaiton_dataloader,
+                optimizer=optimizer,
+                criterion=criterion,
+                num_epochs=config.get("num_epochs"))
+            test(
+                model=model,
+                test_data_loader=test_annotated_dataloader,
+                criterion=criterion
+            )
 
 
 if __name__ == "__main__":
-    with open("config.json", "r") as f:
+    with open("/fhome/mapsiv04/HPylori-detector/config.json", "r") as f:
         config_data = json.load(f)
-        if not config_data.get("execution_name"):
-            config_data["executionName"] = config_data.get("projectName") + str(uuid.uuid4())[:-4]
         main(config=config_data)
 
 

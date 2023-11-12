@@ -1,22 +1,15 @@
 import torch
-import torchvision
-from torch import nn
-from torchvision.utils import make_grid
-import matplotlib.pyplot as plt
+import wandb
+import tqdm
+import matplotlib as plt
 import numpy as np
-from sklearn.model_selection import KFold
-import random
-import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader,TensorDataset,random_split,SubsetRandomSampler, ConcatDataset
-from torch.nn import functional as F
-from torchvision import datasets,transforms
-import torchvision.transforms as transforms
+from torchvision.utils import make_grid
 #  use gpu if available
 #assert torch.cuda.is_available(), "GPU is not enabled"
 #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 #  use gpu if available
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 def show_image(img):
     img = img.clamp(0, 1) # Ensure that the range of greyscales is between 0 and 1
     npimg = img.numpy()   # Convert to NumPy
@@ -24,30 +17,26 @@ def show_image(img):
     plt.imshow(npimg)
     plt.show()
 
-def test(model, loader, criterion, reshape=False):
-    loss = 0
-    model.eval()
+def test(model, test_data_loader, criterion):
     
-    for batch_features, _ in loader:
-        batch_features = batch_features.to(device)
-        
-        # reshape mini-batch data to [N, 784] matrix (turn images into vectors, and subsume channel)
-        if reshape:
-            batch_features = batch_features.view(-1, 784)
+    test_loss = 0
+    model.eval()
+    print("++++++++"*10)
+    for imgs in tqdm.tqdm(test_data_loader):
+        imgs = imgs.to(DEVICE, dtype=torch.float)
 
         with torch.no_grad():
-            outputs = model(batch_features)
-        
-        # compute training reconstruction loss
-        test_loss = criterion(outputs, batch_features)
- 
-        # add the mini-batch training loss to epoch loss
-        loss += test_loss.item()
+            outputs = model(imgs)
+            loss = criterion(outputs, imgs)
+            test_loss += loss.item()
+            wandb.log({"test_loss": test_loss})
+            print("\nTest Loss", test_loss)
     
     # compute the epoch test loss
-    loss = loss / len(loader)
+    test_loss = test_loss / len(test_data_loader)
     
     # display the epoch training loss
-    print("epoch : {}/{}, Test loss = {:.6f}".format(epoch + 1, epochs, loss))
-    show_image(make_grid(batch_features.detach().cpu().view(-1, 1, 28, 28).transpose(2, 3), nrow=2, normalize = True))
-    show_image(make_grid(outputs.detach().cpu().view(-1, 1, 28, 28).transpose(2, 3), nrow=2, normalize = True)) 
+    print("Test loss = {:.6f}".format(test_loss))
+
+    #show_image(make_grid(imgs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True))
+    #show_image(make_grid(outputs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True)) 
