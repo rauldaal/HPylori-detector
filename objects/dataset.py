@@ -32,7 +32,8 @@ class AnnotatedDataset(QuironDataset):
 		self.data["imageID"] = self.data["ID"].apply(lambda x: x.split(".")[1] if "." in x else None)
 	
 	def get_negative(self):
-		self.data = self.data[self.data['Presence'] == -1]
+		self.data = self.data[self.data['Presence'] == 1]
+  
 	def __getitem__(self, idx):
 		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png")
 		image = self.transform(image)

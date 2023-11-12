@@ -10,7 +10,7 @@
     "numWorkers": 0,
     "batchSize": [64],
     
-    "image_size": [32, 64, 128],
+    "image_size": [28], 
 
     "optimizer_type": ["Adam"],
     "num_epochs": [5, 10],
