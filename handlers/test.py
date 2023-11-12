@@ -18,6 +18,14 @@ def show_image(img):
     plt.show()
 
 def test(model, test_data_loader, criterion, label):
+    if label == 1:
+        label = 'positive'
+    else:
+        label = 'negative'
+        
+    columns=["id", "image", "predicted", "loss"]
+    test_table = wandb.Table(columns=columns)
+    num_images = 10
     
     test_loss = 0
     model.eval()
@@ -31,12 +39,17 @@ def test(model, test_data_loader, criterion, label):
             test_loss += loss.item()
             wandb.log({"test_loss": test_loss})
             print("\nTest Loss", test_loss)
+            imgs = imgs.cpu().numpy()
+            for i in range(num_images):
+                # revisar indices
+                test_table.add_data(i, wandb.Image(imgs[i]), outputs[i], loss[i])
     
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
     
     # display the epoch training loss
-    print(f"({str(label)})Images Test loss = {test_loss:.6f}")
+    print(f"({label})Images Test loss = {test_loss:.6f}")
     wandb.log({"epoch": epoch, f"{label}_loss": test_loss})
+    wandb.log({f"{label} predictions" : test_table})
     #show_image(make_grid(imgs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True))
     #show_image(make_grid(outputs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True)) 
