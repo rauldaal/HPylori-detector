@@ -39,8 +39,3 @@ class CroppedDataset(QuironDataset):
 			for img in images:
 				row = [folder, img, -1]
 				self.data.loc[len(self.data)] = row
-
-
-
-
-
