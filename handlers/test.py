@@ -37,6 +37,6 @@ def test(model, test_data_loader, criterion, label):
     
     # display the epoch training loss
     print(f"({str(label)})Images Test loss = {test_loss:.6f}")
-
+    wandb.log({"epoch": epoch, f"{label}_loss": test_loss})
     #show_image(make_grid(imgs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True))
     #show_image(make_grid(outputs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True)) 
