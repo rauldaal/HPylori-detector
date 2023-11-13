@@ -39,5 +39,5 @@ def save_model(model, config):
 
 def load_model(config):
     model = Autoencoder(**config)
-    model.load_state_dict(config.get("modelNmae"))
+    model.load_state_dict(config.get("modelName"))
     model.eval()
