@@ -63,11 +63,11 @@ def genearate_annotated_dataset(config):
         annotated_dataset = AnnotatedDataset(
             folder_path=config.get("folder_path_annoted"),
             csv_name=config.get("annoted_csv"),
-            transform = transforms.Compose([
-                transforms.ToPILImage(),
-                transforms.Resize((config.get("image_size"), config.get("image_size"))),
-                transforms.ToTensor()
-            ]),
+            #transform = transforms.Compose([
+            #    transforms.ToPILImage(),
+            #    transforms.Resize((config.get("image_size"), config.get("image_size"))),
+            #    transforms.ToTensor()
+            #]),
             label=i
         )
         data.append(annotated_dataset)
