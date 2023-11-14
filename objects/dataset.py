@@ -18,7 +18,6 @@ class QuironDataset(Dataset):
 
 	def __len__(self):
 		return len(self.data)
-	
 
 class AnnotatedDataset(QuironDataset):
 	def __init__(self, folder_path, csv_name, transform, label):

@@ -33,23 +33,23 @@ def main(config):
         print(f'Train batches: {len(train_dataloader)}')
         i = 0
         for imgs in train_dataloader:
-            i = len(imgs)
+            i += len(imgs)
         print(f'Train num images: {i}')
         print(f'Val batches: {len(validaiton_dataloader)}')
         i = 0
         for imgs in validaiton_dataloader:
-            i = len(imgs)
+            i += len(imgs)
         print(f'Val num images: {i}')
         print('Annoted')
         print(f'Pos batches: {len(pos_annotated_dataloader)}')
         i = 0
         for imgs in pos_annotated_dataloader:
-            i = len(imgs)
+            i += len(imgs)
         print(f'Pos num images: {i}')
         print(f'Neg batches: {len(neg_annotated_dataloader)}')
         i = 0
         for imgs in neg_annotated_dataloader:
-            i = len(imgs)
+            i += len(imgs)
         print(f'Neg num images: {i}')
         
         # model, criterion, optimizer = generate_model_objects(config=config)
