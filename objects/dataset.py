@@ -31,12 +31,24 @@ class AnnotatedDataset(QuironDataset):
 	def process_csv(self):
 		self.data["patientID"] = self.data["ID"].apply(lambda x: x.split(".")[0] if "." in x else None)
 		self.data["imageID"] = self.data["ID"].apply(lambda x: x.split(".")[1] if "." in x else None)
+		self.data.drop(columns=['ID'], inplace=True)
+		new_data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
+
+		for idx in range(len(self.data)):
+			path = self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png"
+			if os.path.isfile(path):
+				new_data.loc[len(new_data)] = self.data.iloc[idx]
+		
+		self.data = new_data
+		
 	
 	def get_labeled(self, label):
 		self.data = self.data[self.data['Presence'] == label]
 
 	def __getitem__(self, idx):
-		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png")
+		path = self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png"
+		
+		image = cv2.imread(path)
 		image = self.transform(image)
 		return image
 
