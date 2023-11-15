@@ -42,7 +42,7 @@ def test(model, test_data_loader, criterion, label):
             imgs = imgs.cpu().numpy()
             for i in range(num_images):
                 # revisar indices
-                test_table.add_data(i, wandb.Image(imgs[i]), outputs[i], loss[i])
+                test_table.add_data(i, wandb.Image(imgs[i]), wandb.Image(outputs[i]), loss[i])
     
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
