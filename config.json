@@ -1,6 +1,6 @@
 {
     "projectName": "Hlbacter-detector",
-    "multiexecution": true,
+    "multiexecution": false,
     "seed": 42,
 
     "folder_path_annoted": "/fhome/mapsiv/QuironHelico/AnnotatedPatches",
@@ -8,11 +8,11 @@
     "annoted_csv": "window_metadata.csv",
     "cropped_csv": "metadata.csv",
     "numWorkers": 0,
-    "batchSize": [64],
+    "batchSize": [128],
     
-    "image_size": [28], 
+    "image_size": [64], 
 
     "optimizer_type": ["Adam"],
-    "num_epochs": [5, 10],
+    "num_epochs": [30],
     "learning_rate": [0.0001, 0.01]
 }
