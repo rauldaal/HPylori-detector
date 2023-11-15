@@ -25,7 +25,8 @@ def test(model, test_data_loader, criterion, label):
         
     columns=["id", "image", "predicted", "loss"]
     test_table = wandb.Table(columns=columns)
-    num_images = 10
+    max_num_images = 10
+    num_images = 0
     
     test_loss = 0
     model.eval()
@@ -39,17 +40,22 @@ def test(model, test_data_loader, criterion, label):
             test_loss += loss.item()
             wandb.log({"test_loss": test_loss})
             print("\nTest Loss", test_loss)
-            imgs = imgs.cpu().numpy()
-            for i in range(num_images):
-                # revisar indices
-                test_table.add_data(i, wandb.Image(imgs[i]), wandb.Image(outputs[i]), loss[i])
+            i = 0
+            while num_images < max_num_images and i < len(outputs):
+                single_loss = criterion(outputs[i], imgs[i])
+                test_table.add_data(i, wandb.Image(imgs[i]), wandb.Image(outputs[i]), single_loss)
+                i += 1
+                num_images += 1
+            # for i in range(min(max_num_images, len(outputs))):
+            #     single_loss = criterion(outputs[i], imgs[i])
+            #     test_table.add_data(i, wandb.Image(imgs[i]), wandb.Image(outputs[i]), single_loss)
     
     # compute the epoch test loss
     test_loss = test_loss / len(test_data_loader)
     
     # display the epoch training loss
     print(f"({label})Images Test loss = {test_loss:.6f}")
-    wandb.log({"epoch": epoch, f"{label}_loss": test_loss})
+    wandb.log({f"{label} loss": test_loss})
     wandb.log({f"{label} predictions" : test_table})
     #show_image(make_grid(imgs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True))
     #show_image(make_grid(outputs.detach().cpu().view(-1, 1, 25, 25).transpose(2, 3), nrow=2, normalize = True)) 
