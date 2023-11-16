@@ -10,7 +10,8 @@ from handlers import (
     generate_model_objects,
     map_configuration,
     train,
-    test
+    test,
+    load_model
     )
 
 
@@ -20,26 +21,27 @@ def main(config):
         if not config_data.get("execution_name"):
             config_data["executionName"] = config_data.get("projectName") + str(uuid.uuid4())[:-4]
         print(f"Configuration Parameters: {config}")
-        # with wandb.init(
-        #     project=config.get("projectName"), name=config.get('execution_name'),
-        #     notes='execution', tags=['main'],
-        #     reinit=True, config=config):
-        #     wandb.define_metric('train_loss', step_metric='epoch')
-        #     wandb.define_metric('validation_loss', step_metric='epoch')
+        wandb.init()
+            # project=config.get("projectName"), name=config.get('execution_name'),
+            # notes='execution', tags=['main'],
+            # reinit=True, config=config)
+            
+            # wandb.define_metric('train_loss', step_metric='epoch')
+            # wandb.define_metric('validation_loss', step_metric='epoch')
 
-        train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
+        # train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
         pos_annotated_dataloader, neg_annotated_dataloader = get_annotated_dataloader(config=config)
-        print('Cropped:')
-        print(f'Train batches: {len(train_dataloader)}')
-        i = 0
-        for imgs in train_dataloader:
-            i += len(imgs)
-        print(f'Train num images: {i}')
-        print(f'Val batches: {len(validaiton_dataloader)}')
-        i = 0
-        for imgs in validaiton_dataloader:
-            i += len(imgs)
-        print(f'Val num images: {i}')
+        # print('Cropped:')
+        # print(f'Train batches: {len(train_dataloader)}')
+        # i = 0
+        # for imgs in train_dataloader:
+        #     i += len(imgs)
+        # print(f'Train num images: {i}')
+        # print(f'Val batches: {len(validaiton_dataloader)}')
+        # i = 0
+        # for imgs in validaiton_dataloader:
+        #     i += len(imgs)
+        # print(f'Val num images: {i}')
         print('Annoted')
         print(f'Pos batches: {len(pos_annotated_dataloader)}')
         i = 0
@@ -61,18 +63,21 @@ def main(config):
             #     optimizer=optimizer,
             #     criterion=criterion,
             #     num_epochs=config.get("num_epochs"))
-            # test(
-            #     model=model,
-            #     test_data_loader=pos_annotated_dataloader,
-            #     criterion=criterion,
-            #     label=1
-            # )
-            # test(
-            #     model=model,
-            #     test_data_loader=neg_annotated_dataloader,
-            #     criterion=criterion,
-            #     label=-1
-            # )
+        no_use_model, criterion, optimizer = generate_model_objects(config=config)
+
+        model=load_model("Hlbacter-detector7eea13f3-7c06-4a47-adb5-2dd7b6cb",config)
+        test(
+            model=model,
+            test_data_loader=pos_annotated_dataloader,
+            criterion=criterion,
+            label=1
+        )
+        test(
+            model=model,
+            test_data_loader=neg_annotated_dataloader,
+            criterion=criterion,
+            label=-1
+        )
 
 
 if __name__ == "__main__":
