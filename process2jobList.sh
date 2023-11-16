@@ -10,5 +10,5 @@
 #SBATCH --gres gpu:1 # Number of requested GPU (1). Max 8
 sleep 1
 # File .py  to execute
-python /fhome/mapsiv04/HPylori-detector/test.py
+python /fhome/mapsiv04/HPylori-detector/main.py
 
