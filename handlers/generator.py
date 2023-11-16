@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
+import pickle
 from objects import Autoencoder
-
+import os
 #assert torch.cuda.is_available(), "GPU is not enabled"
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -27,18 +27,25 @@ def generate_model_objects(config):
     return model, criterion, optimizer
 
 
-def save_model(model, config):
-    model_state = {
-        'num_epochs': config.get("num_epochs"),
-        'encoder_dim': config.get("encoder_dim"),
-        'decoder_dim': config.get("decoder_dim"),
-        'state_dict': config.get(model.state_dict()),
-    }
+def save_model(model,config):
+    # model_state = {
+    #     'num_epochs': config.get("num_epochs"),
+    #     'encoder_dim': config.get("encoder_dim"),
+    #     'decoder_dim': config.get("decoder_dim"),
+    #     'state_dict': config.get(model.state_dict()),
+    # }
 
-    torch.save(model_state, config.get("executionName")+'.pth')
+    # torch.save(model_state, config.get("executionName")+'.pth')
+    models_dir = 'models/'
+    os.makedirs(models_dir, exist_ok=True)
 
-
-def load_model(config):
-    model = Autoencoder(**config)
-    model.load_state_dict(config.get("modelName"))
-    model.eval()
+    with open(models_dir+config.get("executionName")+'.pickle', 'wb') as handle:
+        pickle.dump(model, handle)
+def load_model(name,config):
+    # model = Autoencoder(**config)
+    # model.load_state_dict(config.get("modelName"))
+    # model.eval()
+    models_dir = 'models/'
+    with open(models_dir+name+".pickle", 'rb') as handle:
+        model=pickle.load(handle)
+    return model

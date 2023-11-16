@@ -10,7 +10,8 @@ from handlers import (
     generate_model_objects,
     map_configuration,
     train,
-    test
+    test,
+    save_model
     )
 
 
@@ -38,6 +39,7 @@ def main(config):
                 optimizer=optimizer,
                 criterion=criterion,
                 num_epochs=config.get("num_epochs"))
+            save_model(model,config)
             test(
                 model=model,
                 test_data_loader=pos_annotated_dataloader,
