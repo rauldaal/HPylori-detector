@@ -36,10 +36,11 @@ def save_model(model,config):
     # }
 
     # torch.save(model_state, config.get("executionName")+'.pth')
-    models_dir = 'models/'
+    # models_dir = 'models/'
+    models_dir = os.path.join('models', '')
     os.makedirs(models_dir, exist_ok=True)
 
-    with open(models_dir+config.get("executionName")+'.pickle', 'wb') as handle:
+    with open(os.path.join(models_dir, config.get("executionName") + '.pickle'), 'wb') as handle:
         pickle.dump(model, handle)
 def load_model(name,config):
     # model = Autoencoder(**config)
