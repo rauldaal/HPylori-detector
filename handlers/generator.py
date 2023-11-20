@@ -36,16 +36,22 @@ def save_model(model,config):
     # }
 
     # torch.save(model_state, config.get("executionName")+'.pth')
-    models_dir = 'models/'
-    os.makedirs(models_dir, exist_ok=True)
+    # models_dir = 'models/'
+    models_dir = os.path.join("/fhome/mapsiv04/",'models')
+    try:
 
-    with open(models_dir+config.get("executionName")+'.pickle', 'wb') as handle:
-        pickle.dump(model, handle)
+        os.makedirs(models_dir, exist_ok=True)
+        with open(os.path.join(models_dir, config.get("executionName") + '.pickle'), 'wb') as handle:
+            pickle.dump(model, handle)
+        print("Modelo Guardado Correctamente")
+    except Exception as e:
+        print("Error en el guardado. Error: {e}")
+
 def load_model(name,config):
     # model = Autoencoder(**config)
     # model.load_state_dict(config.get("modelName"))
     # model.eval()
-    models_dir = 'models/'
-    with open(models_dir+name+".pickle", 'rb') as handle:
+    models_dir = os.path.join("/fhome/mapsiv04/",'models')
+    with open(os.path.join(models_dir,name+".pickle"), 'rb') as handle:
         model=pickle.load(handle)
     return model
