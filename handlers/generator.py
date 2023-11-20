@@ -41,13 +41,14 @@ def save_model(model,config):
     try:
 
         os.makedirs(models_dir, exist_ok=True)
-
+        print("RUTA: ",models_dir)
+        print("Fitxer que obrira:", os.path.join(models_dir, config.get("executionName") + '.pickle'))
         with open(os.path.join(models_dir, config.get("executionName") + '.pickle'), 'wb') as handle:
             pickle.dump(model, handle)
         print("Modelo Guardado Correctamente")
     except Exception as e:
         print("Error en el guardado. Error: {e}")
-        
+
 def load_model(name,config):
     # model = Autoencoder(**config)
     # model.load_state_dict(config.get("modelName"))
