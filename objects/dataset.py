@@ -12,12 +12,14 @@ class QuironDataset(Dataset):
 
 	def __getitem__(self, idx):
 		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 		image = self.transform(image)
 
 		return image
 
 	def __len__(self):
 		return len(self.data)
+
 
 class AnnotatedDataset(QuironDataset):
 	def __init__(self, folder_path, csv_name, transform, label):
@@ -49,6 +51,7 @@ class AnnotatedDataset(QuironDataset):
 		path = self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png"
 		
 		image = cv2.imread(path)
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 		image = self.transform(image)
 		return image
 
@@ -62,7 +65,7 @@ class CroppedDataset(QuironDataset):
 		self.data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
 		folders = self.raw_data[self.raw_data["DENSITAT"] == "NEGATIVA"]["CODI"].tolist()
 		for folder in folders:
-			if len(self.data)>10000:
+			if len(self.data) > 10000:
 				break
 			try:
 				images = os.listdir(self.folder_path + "/" + folder+ "_1")
