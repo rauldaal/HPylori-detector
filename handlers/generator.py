@@ -37,7 +37,7 @@ def save_model(model,config):
 
     # torch.save(model_state, config.get("executionName")+'.pth')
     # models_dir = 'models/'
-    models_dir = os.path.join(os.getcwd(),'models')
+    models_dir = os.path.join("/fhome/mapsiv04/",'models')
     try:
 
         os.makedirs(models_dir, exist_ok=True)
