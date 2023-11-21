@@ -10,7 +10,7 @@
     "cropped_csv": "metadata.csv",
     "numWorkers": 0,
     "batchSize": [128],
-
+    "model_name": "last_execution",
     "execution_name": "last_execution",
     
     "image_size": [64], 
