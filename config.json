@@ -2,6 +2,7 @@
     "projectName": "Hlbacter-detector",
     "multiexecution": false,
     "seed": 42,
+    "project_path": "/fhome/mapsiv04/HPylori-detector",
 
     "folder_path_annoted": "/fhome/mapsiv/QuironHelico/AnnotatedPatches",
     "folder_path_cropped": "/fhome/mapsiv/QuironHelico/CroppedPatches",
@@ -10,7 +11,6 @@
     "numWorkers": 0,
     "batchSize": [128],
 
-    "model_name": "autoencoder",
     "execution_name": "last_execution",
     
     "image_size": [64], 

@@ -29,15 +29,14 @@ def generate_model_objects(config):
 
 def save_model(model, config):
 
-    models_dir = os.path.join("/fhome/mapsiv04/HPylori-detector", 'models')
+    models_dir = os.path.join(config.get("project_path"), 'models')
     try:
-
         os.makedirs(models_dir, exist_ok=True)
         with open(os.path.join(models_dir, config.get("executionName") + '.pickle'), 'wb') as handle:
             pickle.dump(model, handle)
         print("Modelo Guardado Correctamente")
     except Exception as e:
-        print("Error en el guardado. Error: {e}")
+        print(f"Error en el guardado. Error: {e}")
 
 
 def load_model(name, config):

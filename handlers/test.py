@@ -58,7 +58,7 @@ def convertir_a_hsv(batch):
 
     # Itera sobre cada imagen en el batch
     for i in range(batch.shape[0]):
-        imagen_hsv = cv2.cvtColor(batch[i], cv2.COLOR_BGR2HSV)
+        imagen_hsv = cv2.cvtColor(batch[i].numpy(), cv2.COLOR_BGR2HSV)
         batch_canal_h[i] = imagen_hsv[:, :, 0]
 
     return batch_canal_h
