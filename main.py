@@ -11,7 +11,8 @@ from handlers import (
     map_configuration,
     train,
     test,
-    save_model
+    save_model,
+    load_model
     )
 
 
@@ -24,22 +25,26 @@ def main(config):
         with wandb.init(
             project=config.get("projectName"), name=config.get('execution_name'),
             notes='execution', tags=['main'],
-            reinit=True, config=config):
+            reinit = True, config=config):
             wandb.define_metric('train_loss', step_metric='epoch')
             wandb.define_metric('validation_loss', step_metric='epoch')
 
             train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
             pos_annotated_dataloader, neg_annotated_dataloader = get_annotated_dataloader(config=config)
-            model, criterion, optimizer = generate_model_objects(config=config)
+            if not config.get("model_name"):
 
-            train(
-                model=model,
-                train_data_loader=train_dataloader,
-                validation_data_loader=validaiton_dataloader,
-                optimizer=optimizer,
-                criterion=criterion,
-                num_epochs=config.get("num_epochs"))
-            save_model(model,config)
+                model, criterion, optimizer = generate_model_objects(config=config)
+
+                train(
+                    model=model,
+                    train_data_loader=train_dataloader,
+                    validation_data_loader=validaiton_dataloader,
+                    optimizer=optimizer,
+                    criterion=criterion,
+                    num_epochs=config.get("num_epochs"))
+                save_model(model, config)
+            else:
+                model, criterion = load_model(config.get("model_name"), config)
             test(
                 model=model,
                 test_data_loader=pos_annotated_dataloader,

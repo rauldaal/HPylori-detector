@@ -9,6 +9,9 @@
     "cropped_csv": "metadata.csv",
     "numWorkers": 0,
     "batchSize": [128],
+
+    "model_name": "autoencoder",
+    "execution_name": "last_execution",
     
     "image_size": [64], 
 
