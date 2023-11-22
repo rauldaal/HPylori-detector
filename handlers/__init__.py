@@ -9,7 +9,11 @@ from handlers.generator import (
     load_model
 )
 
-from handlers.test import test
+from handlers.test import (
+    test,
+    analyzer,
+    compute_confussion_matrix
+)
 
 from handlers.train import train
 

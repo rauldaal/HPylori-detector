@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
+import pickle
 from objects import Autoencoder
+import os
 
-#assert torch.cuda.is_available(), "GPU is not enabled"
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -28,17 +28,22 @@ def generate_model_objects(config):
 
 
 def save_model(model, config):
-    model_state = {
-        'num_epochs': config.get("num_epochs"),
-        'encoder_dim': config.get("encoder_dim"),
-        'decoder_dim': config.get("decoder_dim"),
-        'state_dict': config.get(model.state_dict()),
-    }
 
-    torch.save(model_state, config.get("executionName")+'.pth')
+    models_dir = os.path.join(config.get("project_path"), 'models')
+    
+    try:
+        os.makedirs(models_dir, exist_ok=True)
+        with open(os.path.join(models_dir, config.get("execution_name") + '.pickle'), 'wb') as handle:
+            pickle.dump(model, handle)
+        print("Modelo Guardado Correctamente")
+    except Exception as e:
+        print(f"Error en el guardado. Error: {e}")
 
 
 def load_model(config):
-    model = Autoencoder(**config)
-    model.load_state_dict(config.get("modelName"))
-    model.eval()
+
+    models_dir = os.path.join(config.get("project_path"), 'models')
+    with open(os.path.join(models_dir,config.get("execution_name")+".pickle"), 'rb') as handle:
+        model = pickle.load(handle)
+    criterion = nn.MSELoss()
+    return model, criterion

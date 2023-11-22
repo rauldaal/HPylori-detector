@@ -1,18 +1,21 @@
 {
     "projectName": "Hlbacter-detector",
-    "multiexecution": true,
+    "multiexecution": false,
     "seed": 42,
+    "project_path": "/fhome/mapsiv04/HPylori-detector",
 
     "folder_path_annoted": "/fhome/mapsiv/QuironHelico/AnnotatedPatches",
     "folder_path_cropped": "/fhome/mapsiv/QuironHelico/CroppedPatches",
     "annoted_csv": "window_metadata.csv",
     "cropped_csv": "metadata.csv",
     "numWorkers": 0,
-    "batchSize": [64],
+    "batchSize": [128],
+    "model_name": "last_execution",
+    "execution_name": "last_execution",
     
-    "image_size": [28], 
+    "image_size": [64], 
 
     "optimizer_type": ["Adam"],
-    "num_epochs": [5, 10],
+    "num_epochs": [30],
     "learning_rate": [0.0001, 0.01]
 }

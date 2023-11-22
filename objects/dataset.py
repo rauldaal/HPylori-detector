@@ -12,13 +12,14 @@ class QuironDataset(Dataset):
 
 	def __getitem__(self, idx):
 		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"_1/"+self.data.iloc[idx]["imageID"])
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 		image = self.transform(image)
 
 		return image
 
 	def __len__(self):
 		return len(self.data)
-	
+
 
 class AnnotatedDataset(QuironDataset):
 	def __init__(self, folder_path, csv_name, transform, label):
@@ -32,12 +33,25 @@ class AnnotatedDataset(QuironDataset):
 	def process_csv(self):
 		self.data["patientID"] = self.data["ID"].apply(lambda x: x.split(".")[0] if "." in x else None)
 		self.data["imageID"] = self.data["ID"].apply(lambda x: x.split(".")[1] if "." in x else None)
+		self.data.drop(columns=['ID'], inplace=True)
+		new_data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
+
+		for idx in range(len(self.data)):
+			path = self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png"
+			if os.path.isfile(path):
+				new_data.loc[len(new_data)] = self.data.iloc[idx]
+		
+		self.data = new_data
+		
 	
 	def get_labeled(self, label):
 		self.data = self.data[self.data['Presence'] == label]
 
 	def __getitem__(self, idx):
-		image = cv2.imread(self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png")
+		path = self.folder_path+"/"+self.data.iloc[idx]["patientID"]+"/"+self.data.iloc[idx]["imageID"]+".png"
+		
+		image = cv2.imread(path)
+		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 		image = self.transform(image)
 		return image
 
@@ -51,7 +65,7 @@ class CroppedDataset(QuironDataset):
 		self.data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
 		folders = self.raw_data[self.raw_data["DENSITAT"] == "NEGATIVA"]["CODI"].tolist()
 		for folder in folders:
-			if len(self.data)>10000:
+			if len(self.data) > 10000:
 				break
 			try:
 				images = os.listdir(self.folder_path + "/" + folder+ "_1")

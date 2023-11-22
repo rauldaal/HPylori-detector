@@ -27,8 +27,7 @@ def get_cropped_dataloader(config):
 
 
 def get_annotated_dataloader(config):
-    positive_dataset = genearate_annotated_dataset(config, 1)
-    negative_dataset = genearate_annotated_dataset(config, -1)
+    positive_dataset, negative_dataset = genearate_annotated_dataset(config)
     annotated_data_loader_pos = DataLoader(
         dataset=positive_dataset,
         batch_size=config.get("batchSize"),
