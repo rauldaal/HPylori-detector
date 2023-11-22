@@ -30,9 +30,10 @@ def generate_model_objects(config):
 def save_model(model, config):
 
     models_dir = os.path.join(config.get("project_path"), 'models')
+    
     try:
         os.makedirs(models_dir, exist_ok=True)
-        with open(os.path.join(models_dir, config.get("executionName") + '.pickle'), 'wb') as handle:
+        with open(os.path.join(models_dir, config.get("execution_name") + '.pickle'), 'wb') as handle:
             pickle.dump(model, handle)
         print("Modelo Guardado Correctamente")
     except Exception as e:
@@ -42,7 +43,7 @@ def save_model(model, config):
 def load_model(name, config):
 
     models_dir = os.path.join("/fhome/mapsiv04/HPylori-detector", 'models')
-    with open(os.path.join(models_dir, name+".pickle"), 'rb') as handle:
+    with open(os.path.join(models_dir,config.get("execution_name")+".pickle"), 'rb') as handle:
         model = pickle.load(handle)
     criterion = nn.MSELoss()
     return model, criterion
