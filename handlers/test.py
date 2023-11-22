@@ -4,9 +4,14 @@ import numpy as np
 import torch
 import tqdm
 import wandb
-
+import seaborn as sns
+from sklearn.metrics import (
+    roc_curve,
+    auc,
+    confusion_matrix,
+    accuracy_score
+)
 from torchvision.utils import make_grid
-from sklearn.metrics import roc_curve, auc
 
 
 #  use gpu if available
@@ -74,20 +79,20 @@ def convertir_a_hsv(input, output):
     input_results = []
     output_results = []
     input = input.permute(0, 2, 3, 1)
-    input_canal_h = np.zeros_like(input[:, :, :, 0], dtype=np.float32)
+    input_canal_h = np.zeros_like(input[:, :, :, 0].to("cpu"), dtype=np.float32)
 
     output = output.permute(0, 2, 3, 1)
-    output_canal_h = np.zeros_like(output[:, :, :, 0], dtype=np.float32)
+    output_canal_h = np.zeros_like(output[:, :, :, 0].to("cpu"), dtype=np.float32)
 
     # Itera sobre cada imagen en el batch
     for i in range(input.shape[0]):
-        input_imagen_hsv = cv2.cvtColor(input[i].numpy(), cv2.COLOR_RGB2HSV)
+        input_imagen_hsv = cv2.cvtColor(input[i].to("cpu").numpy(), cv2.COLOR_RGB2HSV)
         input_canal_h[i] = input_imagen_hsv[:, :, 0]
         f_red_input = np.sum(np.logical_or(input_canal_h[i] >= 340, input_canal_h[i] <= 20))
         #print("++++++"*5)
         #print(f"f_red_input:     {f_red_input}")
 
-        output_imagen_hsv = cv2.cvtColor(output[i].numpy(), cv2.COLOR_RGB2HSV)
+        output_imagen_hsv = cv2.cvtColor(output[i].to("cpu").numpy(), cv2.COLOR_RGB2HSV)
         output_canal_h[i] = output_imagen_hsv[:, :, 0]
         f_red_output = np.sum(np.logical_or(output_canal_h[i] >= 340, output_canal_h[i] <= 20))
         #print(f"f_red_output:     {f_red_output}")       
@@ -114,7 +119,7 @@ def classifier(input, output):
     return batch_results, division_results
 
 
-def analyzer(results, true_labels):
+def analyzer(results, true_labels, project_path):
     fpr, tpr, thresholds = roc_curve(true_labels, results)
     roc_auc = auc(fpr, tpr)
     youden_index = tpr - fpr
@@ -128,8 +133,20 @@ def analyzer(results, true_labels):
     plt.ylabel('Tasa de Verdaderos Positivos (Sensibilidad)')
     plt.title('Curva ROC')
     plt.legend(loc='lower right')
+    plt.savefig(project_path+"/plots/roc.png")
     plt.show()
     return optimal_threshold
 
 
-
+def compute_confussion_matrix(true, pred, project_path):
+    plt.figure(figsize=(8, 8))
+    conf_matrix = confusion_matrix(true, pred)
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False,
+            xticklabels=['Negativo', 'Positivo'], yticklabels=['Negativo', 'Positivo'])
+    plt.xlabel('Etiquetas Predichas')
+    plt.ylabel('Etiquetas Reales')
+    plt.title('Matriz de Confusión')
+    plt.savefig(project_path+"/plots/confussion.png")
+    plt.show()
+    acc = accuracy_score(true, pred)
+    print(f"ACCURACY SCORE: {acc}")

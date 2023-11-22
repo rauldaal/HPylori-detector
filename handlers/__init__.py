@@ -11,7 +11,8 @@ from handlers.generator import (
 
 from handlers.test import (
     test,
-    analyzer
+    analyzer,
+    compute_confussion_matrix
 )
 
 from handlers.train import train

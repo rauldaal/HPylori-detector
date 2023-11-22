@@ -13,7 +13,8 @@ from handlers import (
     test,
     save_model,
     load_model,
-    analyzer
+    analyzer,
+    compute_confussion_matrix
     )
 
 
@@ -65,8 +66,9 @@ def main(config):
             all_true_labels.extend(true_labels)
             all_pred_labels.extend(pred_labels)
             all_divisions.extend(divisions)
-            analyzer(results=all_pred_labels, true_labels=all_true_labels)
-            analyzer(results=all_divisions, true_labels=all_true_labels)
+            analyzer(results=all_pred_labels, true_labels=all_true_labels, project_path=config.get("project_path"))
+            analyzer(results=all_divisions, true_labels=all_true_labels, project_path=config.get("project_path"))
+            compute_confussion_matrix(true=all_true_labels, pred=all_pred_labels, project_path=config.get("project_path"))
 
 
 if __name__ == "__main__":
