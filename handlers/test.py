@@ -53,7 +53,8 @@ def test(model, test_data_loader, criterion, label):
 
 
 def convertir_a_hsv(batch):
-    batch = batch.permute(0, 2, 3, 1)
+    batch_cpu = batch.cpu()
+    batch = batch_cpu.permute(0, 2, 3, 1)
     batch_canal_h = np.zeros_like(batch[:, :, :, 0], dtype=np.float32)
 
     # Itera sobre cada imagen en el batch
