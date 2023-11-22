@@ -44,7 +44,7 @@ def main(config):
                     num_epochs=config.get("num_epochs"))
                 save_model(model, config)
             else:
-                model, criterion = load_model(config.get("model_name"), config)
+                model, criterion = load_model(config)
             test(
                 model=model,
                 test_data_loader=pos_annotated_dataloader,
