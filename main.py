@@ -45,18 +45,31 @@ def main(config):
                 save_model(model, config)
             else:
                 model, criterion = load_model(config.get("model_name"), config)
-            test(
+            true_labels_pos,pred_labels_pos=test(
                 model=model,
                 test_data_loader=pos_annotated_dataloader,
                 criterion=criterion,
                 label=1
             )
-            test(
+            true_labels_neg,pred_labels_neg=test(
                 model=model,
                 test_data_loader=neg_annotated_dataloader,
                 criterion=criterion,
                 label=-1
             )
+            true_labels_pos.extend(true_labels_neg)
+            pred_labels_pos.extend(pred_labels_neg)
+
+
+            print(f"Final True Labels: {true_labels_pos}")
+            print(f"Final Pred Labels: {pred_labels_pos}")
+            print(len(true_labels_pos),len(pred_labels_pos))
+
+            # plt.figure()
+            # fpr,tpr,thresholds=roc_curve(true_labels_pos,pred_labels_pos)
+            # plt.plot(fpr,tpr,marker=".")
+            # plt.show()
+            wandb.log({f"roc" : wandb.plot.roc_curve(true_labels_pos, pred_labels_pos,labels=None,classes_to_plot=None)})
 
 
 if __name__ == "__main__":
