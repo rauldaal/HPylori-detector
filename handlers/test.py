@@ -98,7 +98,7 @@ def classifier(input, output):
         num_input = np.sum(input_values)
         output_values = np.logical_and(output_h[i] >= -15, output_h[i] <= 15)
         num_output = np.sum(output_values)
-        res = num_input/num_output
+        res = num_output/num_input
         ret.append(res)
         # print(f"Numero red entrada: {num_input}")
         # print(f"Numero red salida: {num_output}")

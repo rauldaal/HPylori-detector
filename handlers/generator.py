@@ -4,7 +4,7 @@ import torch.optim as optim
 import pickle
 from objects import Autoencoder
 import os
-
+import io
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
@@ -38,11 +38,18 @@ def save_model(model, config):
     except Exception as e:
         print(f"Error en el guardado. Error: {e}")
 
+class CPU_Unpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'torch.storage' and name == '_load_from_bytes':
+            return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+        else: return super().find_class(module, name)
 
 def load_model(name, config):
 
-    models_dir = os.path.join("/fhome/mapsiv04/HPylori-detector", 'models')
-    with open(os.path.join(models_dir, name+".pickle"), 'rb') as handle:
-        model = pickle.load(handle)
+    models_dir = os.path.join(config.get("project_path"), 'models')
+    with open(os.path.join(models_dir, config.get("model_name")+".pickle"), 'rb') as handle:
+        # model = pickle.load(handle)
+        model = CPU_Unpickler(handle).load()
+
     criterion = nn.MSELoss()
     return model, criterion

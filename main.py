@@ -3,6 +3,9 @@ import json
 import logging
 import wandb
 import uuid
+from sklearn.metrics import roc_curve,roc_auc_score
+import matplotlib.pyplot as plt
+# import scikitplot as skplt
 
 from handlers import (
     get_cropped_dataloader,
@@ -45,6 +48,7 @@ def main(config):
                 save_model(model, config)
             else:
                 model, criterion = load_model(config.get("model_name"), config)
+
             true_labels_pos,pred_labels_pos=test(
                 model=model,
                 test_data_loader=pos_annotated_dataloader,
@@ -65,11 +69,18 @@ def main(config):
             print(f"Final Pred Labels: {pred_labels_pos}")
             print(len(true_labels_pos),len(pred_labels_pos))
 
-            # plt.figure()
-            # fpr,tpr,thresholds=roc_curve(true_labels_pos,pred_labels_pos)
-            # plt.plot(fpr,tpr,marker=".")
-            # plt.show()
-            wandb.log({f"roc" : wandb.plot.roc_curve(true_labels_pos, pred_labels_pos,labels=None,classes_to_plot=None)})
+
+            auc = roc_auc_score(true_labels_pos, pred_labels_pos)
+            print(f"AUC:{auc}")
+            plt.figure()
+            fpr,tpr,thresholds=roc_curve(true_labels_pos,pred_labels_pos)
+            plt.plot(fpr,tpr,marker=".",label= "AUC ="+str(auc))
+            plt.legend(loc=4)
+            plt.show()
+
+
+
+            # wandb.log({f"roc" : wandb.plot.roc_curve(true_labels_pos, pred_labels_pos,labels=None,classes_to_plot=None)})
 
 
 if __name__ == "__main__":
