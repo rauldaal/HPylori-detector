@@ -12,7 +12,8 @@ from handlers import (
     train,
     test,
     save_model,
-    load_model
+    load_model,
+    analyzer
     )
 
 
@@ -45,18 +46,27 @@ def main(config):
                 save_model(model, config)
             else:
                 model, criterion = load_model(config)
-            test(
+            all_true_labels, all_pred_labels, all_divisions = [], [], []
+            true_labels, pred_labels, divisions = test(
                 model=model,
                 test_data_loader=pos_annotated_dataloader,
                 criterion=criterion,
                 label=1
             )
-            test(
+            all_true_labels.extend(true_labels)
+            all_pred_labels.extend(pred_labels)
+            all_divisions.extend(divisions)
+            true_labels, pred_labels, divisions = test(
                 model=model,
                 test_data_loader=neg_annotated_dataloader,
                 criterion=criterion,
                 label=-1
             )
+            all_true_labels.extend(true_labels)
+            all_pred_labels.extend(pred_labels)
+            all_divisions.extend(divisions)
+            analyzer(results=all_pred_labels, true_labels=all_true_labels)
+            analyzer(results=all_divisions, true_labels=all_true_labels)
 
 
 if __name__ == "__main__":

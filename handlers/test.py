@@ -6,14 +6,18 @@ import tqdm
 import wandb
 
 from torchvision.utils import make_grid
+from sklearn.metrics import roc_curve, auc
 
 
 #  use gpu if available
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-THRESHOLD = 1.9
+THRESHOLD = 3.0
 
 
 def test(model, test_data_loader, criterion, label):
+    generated_labels = []
+    divisions_calcs = []
+    true_labels = []
     if label == 1:
         label = 'positive'
     else:
@@ -32,6 +36,7 @@ def test(model, test_data_loader, criterion, label):
             true_class = [1 for i in range(imgs.shape[0])]
         elif label == "negative" :
             true_class = [0 for i in range(imgs.shape[0])]
+        true_labels.extend(true_class)
         
         imgs = imgs.to(DEVICE, dtype=torch.float)
 
@@ -42,8 +47,10 @@ def test(model, test_data_loader, criterion, label):
             wandb.log({"test_loss": test_loss})
             print("\nTest Loss", test_loss)
             i = 0
-            ret = classifier(imgs, outputs)
+            ret, division = classifier(imgs, outputs)
             result = sum([x == y for x, y in zip(true_class, ret)]*1)
+            generated_labels.extend(ret)
+            divisions_calcs.extend(division)
             print("++++++++"*10)
             print(F"BATCH RESULT {label}:  {result}/{len(ret)}")
 
@@ -60,6 +67,7 @@ def test(model, test_data_loader, criterion, label):
     print(f"({label})Images Test loss = {test_loss:.6f}")
     wandb.log({f"{label} loss": test_loss})
     wandb.log({f"{label} predictions": test_table})
+    return true_labels, generated_labels, divisions_calcs
 
 
 def convertir_a_hsv(input, output):
@@ -93,13 +101,35 @@ def convertir_a_hsv(input, output):
 def classifier(input, output):
     
     batch_results = []
+    division_results = []
 
     fred_input, fred_output = convertir_a_hsv(input, output)
     for fi, fo in zip(fred_input, fred_output):
         f = fi/fo if fo != 0 else fi
+        division_results.append(f)
         if f > THRESHOLD:
             batch_results.append(1)
         else:
             batch_results.append(0)
-    return batch_results
+    return batch_results, division_results
+
+
+def analyzer(results, true_labels):
+    fpr, tpr, thresholds = roc_curve(true_labels, results)
+    roc_auc = auc(fpr, tpr)
+    youden_index = tpr - fpr
+    optimal_threshold = thresholds[np.argmax(youden_index)]
+
+    print(f'Umbral óptimo: {optimal_threshold}')
+    plt.figure(figsize=(8, 8))
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'AUC = {roc_auc:.2f}')
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlabel('Tasa de Falsos Positivos (1 - Especificidad)')
+    plt.ylabel('Tasa de Verdaderos Positivos (Sensibilidad)')
+    plt.title('Curva ROC')
+    plt.legend(loc='lower right')
+    plt.show()
+    return optimal_threshold
+
+
 

@@ -9,7 +9,10 @@ from handlers.generator import (
     load_model
 )
 
-from handlers.test import test
+from handlers.test import (
+    test,
+    analyzer
+)
 
 from handlers.train import train
 

@@ -42,7 +42,7 @@ def save_model(model, config):
 
 def load_model(config):
 
-    models_dir = os.path.join("/fhome/mapsiv04/HPylori-detector", 'models')
+    models_dir = os.path.join(config.get("project_path"), 'models')
     with open(os.path.join(models_dir,config.get("execution_name")+".pickle"), 'rb') as handle:
         model = pickle.load(handle)
     criterion = nn.MSELoss()
