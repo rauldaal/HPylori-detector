@@ -69,6 +69,7 @@ Un cop s'ha fet la reconstrucció de la imatge avans de determinar si es positiv
 
 #### Figura 2
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/04c54c80-846a-424c-9e48-7eae5ae24b5b)
+
 *Espai de color HSV.[https://arxiv.org/pdf/2309.16053.pdf](https://es.wikipedia.org/wiki/Modelo_de_color_HSV)*
 
 
@@ -78,7 +79,8 @@ Per determinar aquest millor threshold es fa us del *Youden's J statistic* on es
 
 #### Figura 3
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/55da6b4e-c127-457e-a8cd-e20e6ed7830a)
-*ROC CURVE *
+
+*ROC CURVE*
 
 ### Metrqiues i resultats
 
