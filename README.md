@@ -71,6 +71,7 @@ Un cop s'ha fet la reconstrucció de la imatge avans de determinar si es positiv
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/04c54c80-846a-424c-9e48-7eae5ae24b5b)
 *Espai de color HSV.[https://arxiv.org/pdf/2309.16053.pdf](https://es.wikipedia.org/wiki/Modelo_de_color_HSV)*
 
+
 Per tant es fara el recompte de pixels en en canal vermell de la imatge en HSV de la imatge originial *input* i de la posterior a la reconstrucció ``output``. Per determinar la seva frequencia ``Fred`` es dividira el resultat del recompte ``Input/Output`` i es podra dibuixara un ROC curve *Figura 3* ja que tenim el *ground truth* de la classificació de les imatges. Aixo es fa per determinar quin es el millor *threshold* per fer la classificació.
 
 Per determinar aquest millor threshold es fa us del *Youden's J statistic* on es busca el valor ``youden_index = tpr - fpr`` (on tpr es *True positive rate* i fpr es *false positive rate*)on es buscara el threshold que maximitzai el *Youden's J statistic* ``optimal_threshold = thresholds[np.argmax(youden_index)]`` .
@@ -78,9 +79,6 @@ Per determinar aquest millor threshold es fa us del *Youden's J statistic* on es
 #### Figura 3
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/55da6b4e-c127-457e-a8cd-e20e6ed7830a)
 *ROC CURVE *
-
-
-
 
 ### Metrqiues i resultats
 
