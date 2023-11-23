@@ -4,7 +4,8 @@ biològic d'interès. Aquesta anàlisi és una tasca que requereix molt temps pe
 
 #### Figura 1
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/09aa29f7-c41f-42ed-a5bd-04e1c46897d2)
-``Pau Cano,Alvaro Caravaca,Debora Gil,and Eva Musulen.Schema of the main steps in the detection of H. pylori.https://arxiv.org/pdf/2309.16053.pdf``
+*Pau Cano,Alvaro Caravaca,Debora Gil,and Eva Musulen.Schema of the main steps in the detection of H. pylori.
+ https://arxiv.org/pdf/2309.16053.pdf*
 
 ## Codi
 El projecte conté els següents arxius *.py* i *.sav*:
