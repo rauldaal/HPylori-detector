@@ -60,7 +60,7 @@ Respecte la definició del descodificador, pren aquesta representació de 8x8 i 
 
 Per fer l'entrenament del model s'hautilitzat un total de 10000 imatges.
 
-Els paramatres per l'entrenament del model despres de fer una multiexecució s'ha conclos que els millors resultat surgeixen de utilitzar ``30 epoques`` amb la funcio d'optimització ``Adam`` i un leraning rate de ``0.0001``.
+Per l'entrenament del model s'han utilitzat el seguents paramatres , ``30 epoques`` amb la funcio d'optimització ``Adam`` i un leraning rate de ``0.0001``. Donat que el model ha tret uns bons resultat i la arquitectura l'autoencoder no es massa complexe en aquest treballl no s'ha aprofundit en trobar un possible model millor.
 
 ## Classificació d'Imatges
 
