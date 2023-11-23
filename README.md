@@ -12,16 +12,16 @@ L'estructura del projecte es la següent:
 1. ``main.py``: Conté el codi principal del projecte, a l'executarlo es posa en funcionament tot el sistema per entrenar/testejar el model d'autoencoder.
 2. ``config.json`: Conte la configuració utilitzada durant el projecte.
 3. ``handlers``:
-   3.1. ``__init__.py``: Imports llibreries.
-   3.2. ``cofiguration.py``: Carrega configuració per els paramatres del model i permet multiexecució.
-   3.3. ``data.py``: Crida per recuperar les dades del dataset a traves de les classe Dataset i crear els DataLoaders.
-   3.4. ``generator.py``: Genera objecte model i les seves funcions derivades per guardar-lo i carregar-lo.
-   3.5. ``train.py``: Entrenament del model.
-   3.6. ``test.py``: Test i metriques model.
+   - ``__init__.py``: Imports llibreries.
+   - ``cofiguration.py``: Carrega configuració per els paramatres del model i permet multiexecució.
+   - ``data.py``: Crida per recuperar les dades del dataset a traves de les classe Dataset i crear els DataLoaders.
+   - ``generator.py``: Genera objecte model i les seves funcions derivades per guardar-lo i carregar-lo.
+   - ``train.py``: Entrenament del model.
+   - ``test.py``: Test i metriques model.
 4. ``objects``:
-   4.1. ``__init__.py``: Imports llibreries.
-   4.2. ``dataset.py``: Defineix classes dataset per carregar i guardar les dades.
-   4.3. ``model.py``: Defineix l'arquitectura del model.
+   - ``__init__.py``: Imports llibreries.
+   - ``dataset.py``: Defineix classes dataset per carregar i guardar les dades.
+   - ``model.py``: Defineix l'arquitectura del model.
 5. ``models``: Contenidor per guardar els models generats en format .pickle.
 6. ``plots``: Contenidor per guardar les figures referents a les metriques del model.
 
