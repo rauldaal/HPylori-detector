@@ -57,6 +57,9 @@ S'ha definit un codificador que pren una imatge d'entrada de 32x32 píxels i 3 c
 Respecte la definició del descodificador, pren aquesta representació de 8x8 i l'amplia utilitzant dues capes de convolució transposada de 32 i 64 filtres per aconseguir una imatge reconstruïda de 32x32 píxels. I entre mig una capa d'activació Relu. Finalment, una funció d'activació sigmoide s'aplica per assegurar que els valors de sortida estiguin entre 0 i 1.
 
 ### Entrenament model
+
+Per fer l'entrenament del model s'hautilitzat un total de 10000 imatges.
+
 Els paramatres per l'entrenament del model despres de fer una multiexecució s'ha conclos que els millors resultat surgeixen de utilitzar ``30 epoques`` amb la funcio d'optimització ``Adam`` i un leraning rate de ``0.0001``.
 
 ## Classificació d'Imatges
@@ -77,12 +80,19 @@ Per tant es fara el recompte de pixels en en canal vermell de la imatge en HSV d
 
 Per determinar aquest millor threshold es fa us del *Youden's J statistic* on es busca el valor ``youden_index = tpr - fpr`` (on tpr es *True positive rate* i fpr es *false positive rate*)on es buscara el threshold que maximitzai el *Youden's J statistic* ``optimal_threshold = thresholds[np.argmax(youden_index)]`` .
 
+El millor threshold ha estat determinat en 3.0, per tant ``Fred > 3`` imatge positiva en Helicobacter.
+
 #### Figura 3
+
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/55da6b4e-c127-457e-a8cd-e20e6ed7830a)
 
-*ROC CURVE*
-
 ### Metrqiues i resultats
+
+ __Confusing Matrix__ 
+![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/d2271c42-2916-4ef6-8a19-8be2cc0fed7d)
+
+Observant la matriu de confusió , es veu com aconseguim un ``Accuracy 94%``, també observem que tenim mes FN que FP cosa que no ens intersa tant, ja que es mes porbable que es faci una segona revisió per un profesional si surt positiu que si surt negatiu.
+
 
 ## Classificació Pacient
 
