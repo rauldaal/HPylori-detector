@@ -100,10 +100,5 @@ Observant la matriu de confusió , es veu com aconseguim un ``Accuracy 94%``, ta
 
 
 
-Introducimos solo muestras negativas en el Autoencoder
-
-Introducimos muestras positivas en el autoencoder
-
-El error aumenta en X situación
 
 
