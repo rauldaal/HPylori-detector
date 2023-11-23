@@ -57,14 +57,18 @@ class AnnotatedDataset(QuironDataset):
 
 
 class CroppedDataset(QuironDataset):
-	def __init__(self, folder_path, csv_name, transform):
+	def __init__(self, folder_path, csv_name, transform, anti_folder, anti_csv):
 		super().__init__(folder_path, csv_name, transform)
+		anti_df = pd.read_csv(anti_folder + "/" + anti_csv)
+		self.anti_patients = anti_df["ID"].apply(lambda x: x.split(".")[0] if "." in x else None).unique()
 		self.process_csv()
 	
 	def process_csv(self):
 		self.data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
 		folders = self.raw_data[self.raw_data["DENSITAT"] == "NEGATIVA"]["CODI"].tolist()
 		for folder in folders:
+			if folder in self.anti_patients:
+				continue
 			if len(self.data) > 10000:
 				break
 			try:

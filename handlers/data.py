@@ -52,7 +52,9 @@ def generate_cropped_dataset(config):
             transforms.ToPILImage(),
             transforms.Resize((config.get("image_size"), config.get("image_size"))),
             transforms.ToTensor()
-        ])
+        ]),
+        anti_folder=config.get("folder_path_annoted"),
+        anti_csv=config.get("annoted_csv")
     )
     return cropped_dataset
 
