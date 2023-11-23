@@ -8,11 +8,22 @@ biològic d'interès. Aquesta anàlisi és una tasca que requereix molt temps pe
  https://arxiv.org/pdf/2309.16053.pdf*
 
 ## Codi
-El projecte conté els següents arxius *.py* i *.sav*:
-1. ``matriculas_v3_OCR.py i matriculas_v3_svm.py``: Conté el codi principal del projecte, a l'executarlo es posa en funcionament tot el sistema de reconeixement automàtic de matrícules, ja sigui amb OCR o svm.
-2. ``models.py``: Conte les funcions necessàries per crear els models de SVM de lletres i dígits.
-3. ``DatasetMatriculaEspanyola.py``: Segmenta la fotografia que conté els caràcters amb la font de la matrícula espanyola, i les guarda en una carpeta per poder crear els models posteriorment.
-4. ``lletresv4(7).sav``: Model SVM per les lletres
+L'estructura del projecte es la següent:
+1. ``main.py``: Conté el codi principal del projecte, a l'executarlo es posa en funcionament tot el sistema per entrenar/testejar el model d'autoencoder.
+2. ``config.json`: Conte la configuració utilitzada durant el projecte.
+3. ``handlers``:
+   3.1. ``__init__.py``: Imports llibreries.
+   3.2. ``cofiguration.py``: Carrega configuració per els paramatres del model i permet multiexecució.
+   3.3. ``data.py``: Crida per recuperar les dades del dataset a traves de les classe Dataset i crear els DataLoaders.
+   3.4. ``generator.py``: Genera objecte model i les seves funcions derivades per guardar-lo i carregar-lo.
+   3.5. ``train.py``: Entrenament del model.
+   3.6. ``test.py``: Test i metriques model.
+4. ``objects``:
+   4.1. ``__init__.py``: Imports llibreries.
+   4.2. ``dataset.py``: Defineix classes dataset per carregar i guardar les dades.
+   4.3. ``model.py``: Defineix l'arquitectura del model.
+5. ``models``: Contenidor per guardar els models generats en format .pickle.
+6. ``plots``: Contenidor per guardar les figures referents a les metriques del model.
 
 
 # Pasos
