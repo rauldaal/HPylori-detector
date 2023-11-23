@@ -119,7 +119,7 @@ def classifier(input, output):
     return batch_results, division_results
 
 
-def analyzer(results, true_labels, project_path):
+def analyzer(results, true_labels, project_path, name=None):
     fpr, tpr, thresholds = roc_curve(true_labels, results)
     roc_auc = auc(fpr, tpr)
     youden_index = tpr - fpr
@@ -133,12 +133,13 @@ def analyzer(results, true_labels, project_path):
     plt.ylabel('Tasa de Verdaderos Positivos (Sensibilidad)')
     plt.title('Curva ROC')
     plt.legend(loc='lower right')
-    plt.savefig(project_path+"/plots/roc.png")
+    name = name if name else "roc.png"
+    plt.savefig(project_path+"/plots/"+name)
     plt.show()
     return optimal_threshold
 
 
-def compute_confussion_matrix(true, pred, project_path):
+def compute_confussion_matrix(true, pred, project_path, name=None):
     plt.figure(figsize=(8, 8))
     conf_matrix = confusion_matrix(true, pred)
     sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', cbar=False,
@@ -146,7 +147,50 @@ def compute_confussion_matrix(true, pred, project_path):
     plt.xlabel('Etiquetas Predichas')
     plt.ylabel('Etiquetas Reales')
     plt.title('Matriz de Confusión')
-    plt.savefig(project_path+"/plots/confussion.png")
+    name = name if name else "confussion.png"
+    plt.savefig(project_path+"/plots/"+name)
     plt.show()
     acc = accuracy_score(true, pred)
     print(f"ACCURACY SCORE: {acc}")
+
+
+def compute_classification(dataloader, patients_idx, labels, model, project_path):
+    generated_labels = []
+
+    for imgs in dataloader:
+        imgs = imgs.to(DEVICE, dtype=torch.float)
+        with torch.no_grad():
+            outputs = model(imgs)
+            ret, _ = classifier(imgs, outputs)
+
+            generated_labels.extend(ret)
+    
+    labels_per_patient = {}
+    print(len(list(generated_labels)))
+    print(len(list(patients_idx.keys())))
+    for indice, id_valor in patients_idx.items():
+        if id_valor not in list(labels_per_patient.keys()):
+            labels_per_patient[id_valor] = []
+        labels_per_patient[id_valor].append(generated_labels[indice-1])
+    
+    probabilities = []
+    actual_label = []
+
+    for patient in labels_per_patient.keys():
+        prob = sum(labels_per_patient[patient])/len(labels_per_patient[patient])
+        probabilities.append(prob)
+        actual_label.append(labels[patient])
+    
+    optimal = analyzer(results=probabilities, true_labels=actual_label, project_path=project_path, name="final_roc.png")
+
+
+    final_results = []
+    for patient in labels_per_patient.keys():
+        prob = sum(labels_per_patient[patient])/len(labels_per_patient[patient])
+        if prob > optimal:
+            final_results.append(1)
+        else:
+            final_results.append(0)
+    
+    compute_confussion_matrix(true=actual_label, pred=final_results, project_path=project_path, name="final_cm.png")
+

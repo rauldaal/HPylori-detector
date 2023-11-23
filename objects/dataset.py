@@ -57,17 +57,23 @@ class AnnotatedDataset(QuironDataset):
 
 
 class CroppedDataset(QuironDataset):
-	def __init__(self, folder_path, csv_name, transform):
+	def __init__(self, folder_path, csv_name, transform, anti_folder, anti_csv):
 		super().__init__(folder_path, csv_name, transform)
+		anti_df = pd.read_csv(anti_folder + "/" + anti_csv)
+		self.anti_patients = anti_df["ID"].apply(lambda x: x.split(".")[0] if "." in x else None).unique().tolist()
 		self.process_csv()
+		self.used_patients = []
 	
 	def process_csv(self):
 		self.data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
 		folders = self.raw_data[self.raw_data["DENSITAT"] == "NEGATIVA"]["CODI"].tolist()
 		for folder in folders:
+			if folder in self.anti_patients:
+				continue
 			if len(self.data) > 10000:
 				break
 			try:
+				self.used_patients.append(folder)
 				images = os.listdir(self.folder_path + "/" + folder+ "_1")
 				for img in images:
 					row = [folder, img, -1]
@@ -75,7 +81,38 @@ class CroppedDataset(QuironDataset):
 			except:
 				print(f"PATH NOT FOUND {self.folder_path + '/' + folder+ '_1'}")
 
+	def get_used_patients(self):
+		return self.used_patients
 
-
-
+class PatientDataset(QuironDataset):
+	def __init__(self, folder_path, csv_name, transform, used_patients):
+		super().__init__(folder_path, csv_name, transform)
+		self.used_patients = used_patients
+		self.patients = {}
+		self.process_csv()
+	
+	def process_csv(self):
+		self.data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
+		folders = self.raw_data[~self.raw_data['CODI'].isin(self.used_patients)]['CODI'].tolist()
+		for folder in folders:
+			if len(self.data) > 200_000:
+				break
+			try:
+				images = os.listdir(self.folder_path + "/" + folder+ "_1")
+				for img in images:
+					row = [folder, img, self.raw_data[self.raw_data['CODI'] == folder]['DENSITAT']]
+					self.data.loc[len(self.data)] = row
+					self.patients[len(self.data)] = folder
+			except:
+				print(f"PATH NOT FOUND {self.folder_path + '/' + folder+ '_1'}")
+	
+	def get_patients(self):
+		return self.patients
+	
+	def get_patients_results(self):
+		results = {}
+		for patient in set(self.patients.values()):
+			status = self.data[self.data['patientID'] == patient]['Presence'].values[0].iloc[-1]
+			results[patient] = 1 if status != 'NEGATIVA' else 0
+		return results
 
