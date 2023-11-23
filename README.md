@@ -42,10 +42,23 @@ Es pot veure el procces mostrar en la *Figura 1*
 *Pau Cano,Alvaro Caravaca,Debora Gil,and Eva Musulen.Schema of the main steps in the detection of H. pylori.
  https://arxiv.org/pdf/2309.16053.pdf*
 
+## Dataloader 
+
+Per tant pel desenvolupament del projecte s'ha definit una classe pare ``QuirionDataset`` amb dos classes filles ``CroppedDataset`` i ``AnnotedDataset`` les quals agafaran els datasets mencionats. I es dividiran de forma que la classe ``CroppedDataset`` nomes s's'utilitzara per l'entrenament del model i utilitzant nomes aquelles imatges de pacient amb una densitat de Helicobacter *negativa* i que no estiguin contingudes en el subconjunt ``d'AnnotedDataset``. Del total d'aquestes imatges negatives un 80% sutilitzaran per entrenament i el 20% restant per validació.
+
+Per altre banda la classe ``AnnotedDataset`` agafara totes les seves imatges tant negatives com positives i s'utilitzaran per fer la seva classificació amb el model previament entrenat.
+
 ## Arquitectura model
 
+L'arquitectura d'autoencoder que s'hautilitzar per l'entrenament del model es la seguent.
 
-## Determinació threshold
+S'ha definit un codificador que pren una imatge d'entrada de 32x32 píxels i 3 canals (RGB). Aquesta imatge passa per dues capes *convolucionals* de 64 i 32 filtres i dues capes de *(max pooling)* per reduir la seva dimensió de 64x46 -> 32x32  -> 8x8 .I entre mig capes d'activació Relu, això permet capturar les característiques més importants de la imatge. Per tant finalment acabem en una representació de 8x8.
+
+Respecte la definició del descodificador, pren aquesta representació de 8x8 i l'amplia utilitzant dues capes de convolució transposada de 32 i 64 filtres per aconseguir una imatge reconstruïda de 32x32 píxels. I entre mig una capa d'activació Relu. Finalment, una funció d'activació sigmoide s'aplica per assegurar que els valors de sortida estiguin entre 0 i 1.
+
+## Determinació threshold 
+
+
 
 ## Classificació Imatges
 
@@ -55,7 +68,7 @@ Es pot veure el procces mostrar en la *Figura 1*
 
 ### Metrqiues i resultats
 
-Per tant pel desenvolupament del projecte s'ha definit una classe pare ``QuirionDataset`` amb dos classes filles ``CroppedDataset`` i ``AnnotedDataset`` les quals agaran els datasets anteriors. I ho dividirem de forma que la classe CroppedDataset nomes s'utilitzara per l'entrenament utilit
+
 
 Introducimos solo muestras negativas en el Autoencoder
 
