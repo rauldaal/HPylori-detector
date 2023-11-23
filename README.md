@@ -99,10 +99,20 @@ El millor threshold ha estat determinat en 3.0, per tant ``Fred > 3`` imatge pos
  __Confusing Matrix__ 
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/d2271c42-2916-4ef6-8a19-8be2cc0fed7d)
 
-Observant la matriu de confusió , es veu com aconseguim un ``Accuracy 94%``, també observem que tenim mes FN que FP cosa que no ens intersa tant, ja que es mes porbable que es faci una segona revisió per un profesional si surt positiu que si surt negatiu.
+Observant la matriu de confusió, es veu com aconseguim un ``Accuracy 94%``, també observem que tenim mes FN que FP cosa que no ens intersa tant, ja que es mes porbable que es faci una segona revisió per un profesional si surt positiu que si surt negatiu.
 
 
 ## Classificació Pacient
+
+Una vegada les imatges dels pacients es troben classificades com a positives o negatives, es pot definir si el pacient ha donat positiu o negatiu a partir de les dades de ``CroppedPatches``. De igual forma per trobar el threshold optim de la classificació de les imatges del pacient, es fa un divisió entre el nombre de imatges positives reals amb les predites y trobar el threshold més optim amb la ROC curve.
+
+![image](plots/final_roc.png)
+
+Aquests són els resultats de predicció de 62 pacients (~100.000 imatges):
+
+![image](plots/final_cm.png)
+
+només 5 pacients han estat classificats erròniament, podrien ser *outlayers* de les propies dades, però s'hauria d'acabar de confirmar.
 
 ### Metrqiues i resultats
 
