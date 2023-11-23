@@ -10,7 +10,7 @@ biològic d'interès. Aquesta anàlisi és una tasca que requereix molt temps pe
 ## Codi
 L'estructura del projecte es la següent:
 1. ``main.py``: Conté el codi principal del projecte, a l'executarlo es posa en funcionament tot el sistema per entrenar/testejar el model d'autoencoder.
-2. ``config.json`: Conte la configuració utilitzada durant el projecte.
+2. ``config.json``: Conte la configuració utilitzada durant el projecte.
 3. ``handlers``:
    - ``__init__.py``: Imports llibreries.
    - ``cofiguration.py``: Carrega configuració per els paramatres del model i permet multiexecució.
