@@ -7,6 +7,7 @@ import uuid
 from handlers import (
     get_cropped_dataloader,
     get_annotated_dataloader,
+    get_patients_dataloader,
     generate_model_objects,
     map_configuration,
     train,
@@ -14,7 +15,8 @@ from handlers import (
     save_model,
     load_model,
     analyzer,
-    compute_confussion_matrix
+    compute_confussion_matrix,
+    compute_classification,
     )
 
 
@@ -31,7 +33,7 @@ def main(config):
             wandb.define_metric('train_loss', step_metric='epoch')
             wandb.define_metric('validation_loss', step_metric='epoch')
 
-            train_dataloader, validaiton_dataloader = get_cropped_dataloader(config=config)
+            train_dataloader, validaiton_dataloader, used_patients = get_cropped_dataloader(config=config)
             pos_annotated_dataloader, neg_annotated_dataloader = get_annotated_dataloader(config=config)
             if not config.get("model_name"):
 
@@ -70,6 +72,8 @@ def main(config):
             analyzer(results=all_divisions, true_labels=all_true_labels, project_path=config.get("project_path"))
             compute_confussion_matrix(true=all_true_labels, pred=all_pred_labels, project_path=config.get("project_path"))
 
+            patients_dataloader, idx_patients, labels = get_patients_dataloader(config=config, used_patients=used_patients)
+            compute_classification(dataloader=patients_dataloader, patients_idx=idx_patients, labels=labels, model=model, project_path=config.get("project_path"))
 
 if __name__ == "__main__":
     with open("/fhome/mapsiv04/HPylori-detector/config.json", "r") as f:

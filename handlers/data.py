@@ -2,7 +2,7 @@ import math
 from torch import Generator
 from torchvision import transforms
 from torch.utils.data import DataLoader, random_split
-from objects import AnnotatedDataset, CroppedDataset
+from objects import AnnotatedDataset, CroppedDataset, PatientDataset
 
 
 def get_cropped_dataloader(config):
@@ -23,7 +23,7 @@ def get_cropped_dataloader(config):
         num_workers=config.get("numWorkers"),
     )
 
-    return cropped_data_loader_train, cropped_data_loader_validation
+    return cropped_data_loader_train, cropped_data_loader_validation, dataset.get_used_patients()
 
 
 def get_annotated_dataloader(config):
@@ -74,6 +74,33 @@ def genearate_annotated_dataset(config):
         )
         data.append(annotated_dataset)
     return data[0], data[1]
+
+def get_patients_dataloader(config, used_patients):
+    patients, idx_patients, labels = generate_patients_dataset(config, used_patients)
+    patient_dataloder = DataLoader(
+        dataset=patients,
+        batch_size=config.get("batchSize"),
+        shuffle=False,
+        num_workers=config.get("numWorkers"),
+    )
+    return patient_dataloder, idx_patients, labels
+
+def generate_patients_dataset(config, used_patients):
+    patients = PatientDataset(
+        folder_path=config.get("folder_path_cropped"),
+        csv_name=config.get("cropped_csv"),
+        transform = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Resize((config.get("image_size"), config.get("image_size"))),
+            transforms.ToTensor()
+        ]),
+        used_patients=used_patients,
+    )
+    idx_patients = patients.get_patients()
+    labels = patients.get_patients_results()
+
+    return patients, idx_patients, labels
+
 
 
 def train_test_splitter(dataset, split_value, seed):
