@@ -158,6 +158,7 @@ def compute_classification(dataloader, patients_idx, labels, model, project_path
     generated_labels = []
 
     for imgs in dataloader:
+        imgs = imgs.to(DEVICE, dtype=torch.float)
         with torch.no_grad():
             outputs = model(imgs)
             ret, _ = classifier(imgs, outputs)
@@ -165,11 +166,12 @@ def compute_classification(dataloader, patients_idx, labels, model, project_path
             generated_labels.extend(ret)
     
     labels_per_patient = {}
-
+    print(len(list(generated_labels)))
+    print(len(list(patients_idx.keys())))
     for indice, id_valor in patients_idx.items():
-        if id_valor not in labels_per_patient:
+        if id_valor not in list(labels_per_patient.keys()):
             labels_per_patient[id_valor] = []
-        labels_per_patient[id_valor].append(generated_labels[indice])
+        labels_per_patient[id_valor].append(generated_labels[indice-1])
     
     probabilities = []
     actual_label = []
@@ -190,5 +192,5 @@ def compute_classification(dataloader, patients_idx, labels, model, project_path
         else:
             final_results.append(0)
     
-    compute_confussion_matrix(tru=actual_label, pred=final_results, project_path=project_path, name="final_cm.png")
+    compute_confussion_matrix(true=actual_label, pred=final_results, project_path=project_path, name="final_cm.png")
 

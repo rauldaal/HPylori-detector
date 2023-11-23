@@ -60,7 +60,7 @@ class CroppedDataset(QuironDataset):
 	def __init__(self, folder_path, csv_name, transform, anti_folder, anti_csv):
 		super().__init__(folder_path, csv_name, transform)
 		anti_df = pd.read_csv(anti_folder + "/" + anti_csv)
-		self.anti_patients = anti_df["ID"].apply(lambda x: x.split(".")[0] if "." in x else None).unique()
+		self.anti_patients = anti_df["ID"].apply(lambda x: x.split(".")[0] if "." in x else None).unique().tolist()
 		self.process_csv()
 		self.used_patients = []
 	
@@ -95,12 +95,12 @@ class PatientDataset(QuironDataset):
 		self.data = pd.DataFrame(columns=["patientID", "imageID", "Presence"])
 		folders = self.raw_data[~self.raw_data['CODI'].isin(self.used_patients)]['CODI'].tolist()
 		for folder in folders:
-			if len(self.data) > 30000:
+			if len(self.data) > 200_000:
 				break
 			try:
 				images = os.listdir(self.folder_path + "/" + folder+ "_1")
 				for img in images:
-					row = [folder, img, -1]
+					row = [folder, img, self.raw_data[self.raw_data['CODI'] == folder]['DENSITAT']]
 					self.data.loc[len(self.data)] = row
 					self.patients[len(self.data)] = folder
 			except:
@@ -111,12 +111,8 @@ class PatientDataset(QuironDataset):
 	
 	def get_patients_results(self):
 		results = {}
-		for patient in self.patients.keys():
-			status = self.data[self.data['CODI'] == patient]['DENSITAT'].values[0]
+		for patient in set(self.patients.values()):
+			status = self.data[self.data['patientID'] == patient]['Presence'].values[0].iloc[-1]
 			results[patient] = 1 if status != 'NEGATIVA' else 0
 		return results
-
-
-
-
 
