@@ -29,15 +29,23 @@ La carpeta ``CroppedPatches`` conte una crapeta per cada pacient amb la identifi
 
 # Metedologia
 
-La metedologia a seguir per classificar les imatges histològiques dels pacients i poder determinar la densitat de la bacteria que tenen consistira en fer l'us d'un autoencoder per la reconstrucció d'imatges. L'objectiu radera daquest autoencoder es overfitejar la reconstrucció d'imatges amb pacients amb densitat de bacteria negativa, la qual cose es tradueix en que les seves imatges histològiques no contentat Helicobacter. La presencia de Helicobacter en imatges es veu representada amb punts en el canal vermell de la imatge. Al overfitejar imatges de pacient que no contenen punts en aquest canal vermell la reconstrucció tampoc en tindra, de forma que al reconstruir imatges que si que continguin el bacteri la seva reconstrucció sera erronea ja que tampoc contindra els punts en el canal vermell de sortida.
+La metedologia a seguir per classificar les imatges histològiques dels pacients i poder determinar la densitat de la bacteria que tenen consistira en fer l'us d'un autoencoder per la reconstrucció d'imatges. L'objectiu radera daquest autoencoder es overfitejar la reconstrucció d'imatges amb pacients amb densitat de bacteria negativa, la qual cose es tradueix en que les seves imatges histològiques no contentat Helicobacter. La presencia de Helicobacter en imatges es veu representada amb punts en el canal vermell de la imatge. Al overfitejar imatges de pacient que no contenen punts en aquest canal vermell la reconstrucció tampoc en tindra, de forma que al reconstruir imatges que si que continguin el bacteri la seva reconstrucció sera erronea ja que tampoc contindra els punts en el canal vermell de sortida. Es pot verure la reconstrucció d'imatges en la *Figura 1*
+
+#### Figura 1
+
+| Negative Reconstruction | Positive Reconstruction|
+| -------------| ------------- | 
+|![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/e744d4e1-efe9-4e83-9b88-af714477fb9a)|![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/7b3bf16e-8bbd-4cd9-9bf0-6ef355893cdd)|
+*Reconstrucció imatges autoencoder*
+
 
 Es podra saber quines son les imatges infectades mirant la frequencia dels seus punts en el canal vermell, es a dir, ``Fred = input (punts en el canal vermell) / outuput /(punts en el canal vermell)``. Si ``Fred > 1`` siginificara que tenim menys punts vermells en el canal de sortida que en el d'entrada, per tant la reconstrucció estara mal feta i sabrem que aquella imatge conte Helicobacter.
 
 Finalment nomes caldra classificar el pacient segons la densitat de bacteria Helicobacter que contingui.
 
-Es pot veure el procces mostrar en la *Figura 1*
+Es pot veure el procces mostrar en la *Figura 2*
 
-#### Figura 1
+#### Figura 2
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/09aa29f7-c41f-42ed-a5bd-04e1c46897d2)
 *Pau Cano,Alvaro Caravaca,Debora Gil,and Eva Musulen.Schema of the main steps in the detection of H. pylori.
  https://arxiv.org/pdf/2309.16053.pdf*
@@ -68,21 +76,21 @@ Com ja s'ha comentat en anteiriors punts la classificació d'imatges es fara uti
 
 ### Determinació threshold 
 
-Un cop s'ha fet la reconstrucció de la imatge avans de determinar si es positiva o no, es passara la seva representació en RGB normalitzada entre 0 i 1 a l'espai de color HSV, tal i com es pot veure en la *Figura 2*. El HSV es un espai de color on en el canal vermell es podra determinar en quin punt es vol que començi a decidir que es vermell i en quin s'acabi.
+Un cop s'ha fet la reconstrucció de la imatge avans de determinar si es positiva o no, es passara la seva representació en RGB normalitzada entre 0 i 1 a l'espai de color HSV, tal i com es pot veure en la *Figura 3*. El HSV es un espai de color on en el canal vermell es podra determinar en quin punt es vol que començi a decidir que es vermell i en quin s'acabi.
 
-#### Figura 2
+#### Figura 3
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/04c54c80-846a-424c-9e48-7eae5ae24b5b)
 
 *Espai de color HSV.[https://arxiv.org/pdf/2309.16053.pdf](https://es.wikipedia.org/wiki/Modelo_de_color_HSV)*
 
 
-Per tant es fara el recompte de pixels en en canal vermell de la imatge en HSV de la imatge originial *input* i de la posterior a la reconstrucció ``output``. Per determinar la seva frequencia ``Fred`` es dividira el resultat del recompte ``Input/Output`` i es podra dibuixara un ROC curve *Figura 3* ja que tenim el *ground truth* de la classificació de les imatges. Aixo es fa per determinar quin es el millor *threshold* per fer la classificació.
+Per tant es fara el recompte de pixels en en canal vermell de la imatge en HSV de la imatge originial *input* i de la posterior a la reconstrucció ``output``. Per determinar la seva frequencia ``Fred`` es dividira el resultat del recompte ``Input/Output`` i es podra dibuixara un ROC curve *Figura 4* ja que tenim el *ground truth* de la classificació de les imatges. Aixo es fa per determinar quin es el millor *threshold* per fer la classificació.
 
 Per determinar aquest millor threshold es fa us del *Youden's J statistic* on es busca el valor ``youden_index = tpr - fpr`` (on tpr es *True positive rate* i fpr es *false positive rate*)on es buscara el threshold que maximitzai el *Youden's J statistic* ``optimal_threshold = thresholds[np.argmax(youden_index)]`` .
 
 El millor threshold ha estat determinat en 3.0, per tant ``Fred > 3`` imatge positiva en Helicobacter.
 
-#### Figura 3
+#### Figura 4
 
 ![image](https://github.com/rauldaal/HPylori-detector/assets/61145059/55da6b4e-c127-457e-a8cd-e20e6ed7830a)
 
